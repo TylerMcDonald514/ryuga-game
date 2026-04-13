@@ -27,11 +27,20 @@ const wallPad = 64;
 const loseHeight = 84;
 const statusBarHeight = 48;
 const previewBallHeight = 32;
+// 壁・地面用 (バウンドなし)
 const friction = {
-	friction: 0.06,
-	frictionStatic: 0.01,
-	frictionAir: 0.01,
-	restitution: 0
+	friction: 0.02,
+	frictionStatic: 0.005,
+	frictionAir: 0.003,
+	restitution: 0,
+};
+
+// フルーツ用 (フルーツ同士は弾む、地面は別途イベントで制御)
+const fruitPhysics = {
+	friction: 0.02,
+	frictionStatic: 0.005,
+	frictionAir: 0.003,
+	restitution: 0.2,
 };
 
 const GameStates = {
@@ -109,23 +118,23 @@ const MIN_ZONE_FOR_RARITY = { common: 1, uncommon: 1, rare: 1, epic: 2, legendar
 // ── ZONE CONFIG: 3 zones × 5 antes ──────────────────────────
 const ZONE_CONFIG = [
 	// Zone 1: 入門地帯
-	{ zone: 1, ante: 1, target: 320,  gravity: 1.0,  label: '🌱 Zone 1-1' },
-	{ zone: 1, ante: 2, target: 500,  gravity: 1.05, label: '🌱 Zone 1-2' },
-	{ zone: 1, ante: 3, target: 810,  gravity: 1.10, label: '🌱 Zone 1-3' },
-	{ zone: 1, ante: 4, target: 1200,  gravity: 1.17, label: '🌱 Zone 1-4' },
-	{ zone: 1, ante: 5, target: 1500,  gravity: 1.28, label: '🐉 Zone 1 BOSS' },
+	{ zone: 1, ante: 1, target: 120,  gravity: 1.0,  label: '🌱 Zone 1-1' },
+	{ zone: 1, ante: 2, target: 200,  gravity: 1.05, label: '🌱 Zone 1-2' },
+	{ zone: 1, ante: 3, target: 310,  gravity: 1.10, label: '🌱 Zone 1-3' },
+	{ zone: 1, ante: 4, target: 440,  gravity: 1.17, label: '🌱 Zone 1-4' },
+	{ zone: 1, ante: 5, target: 600,  gravity: 1.28, label: '🐉 Zone 1 BOSS' },
 	// Zone 2: 修練の地
-	{ zone: 2, ante: 1, target: 1900,  gravity: 1.15, label: '🔥 Zone 2-1' },
-	{ zone: 2, ante: 2, target: 2280,  gravity: 1.22, label: '🔥 Zone 2-2' },
-	{ zone: 2, ante: 3, target: 2680,  gravity: 1.30, label: '🔥 Zone 2-3' },
-	{ zone: 2, ante: 4, target: 2920,  gravity: 1.40, label: '🔥 Zone 2-4' },
-	{ zone: 2, ante: 5, target: 3400, gravity: 1.55, label: '🐉 Zone 2 BOSS' },
+	{ zone: 2, ante: 1, target: 300,  gravity: 1.15, label: '🔥 Zone 2-1' },
+	{ zone: 2, ante: 2, target: 480,  gravity: 1.22, label: '🔥 Zone 2-2' },
+	{ zone: 2, ante: 3, target: 680,  gravity: 1.30, label: '🔥 Zone 2-3' },
+	{ zone: 2, ante: 4, target: 920,  gravity: 1.40, label: '🔥 Zone 2-4' },
+	{ zone: 2, ante: 5, target: 1200, gravity: 1.55, label: '🐉 Zone 2 BOSS' },
 	// Zone 3: 伝説の頂
-	{ zone: 3, ante: 1, target: 4100,  gravity: 1.35, label: '⚡ Zone 3-1' },
-	{ zone: 3, ante: 2, target: 5090,  gravity: 1.45, label: '⚡ Zone 3-2' },
-	{ zone: 3, ante: 3, target: 6250, gravity: 1.58, label: '⚡ Zone 3-3' },
-	{ zone: 3, ante: 4, target: 7650, gravity: 1.74, label: '⚡ Zone 3-4' },
-	{ zone: 3, ante: 5, target: 9999, gravity: 1.95, label: '👑 FINAL BOSS' },
+	{ zone: 3, ante: 1, target: 600,  gravity: 1.35, label: '⚡ Zone 3-1' },
+	{ zone: 3, ante: 2, target: 900,  gravity: 1.45, label: '⚡ Zone 3-2' },
+	{ zone: 3, ante: 3, target: 1250, gravity: 1.58, label: '⚡ Zone 3-3' },
+	{ zone: 3, ante: 4, target: 1650, gravity: 1.74, label: '⚡ Zone 3-4' },
+	{ zone: 3, ante: 5, target: 2200, gravity: 1.95, label: '👑 FINAL BOSS' },
 ];
 
 function escapeHtml(str) {
@@ -754,6 +763,7 @@ const Game = {
 		shieldCharges: 0,      // shield charges remaining (shield +1, talisman +3)
 		mergeCount:   0,       // total merges this ante (for meteor relic)
 		cycleSize:    0,       // current butterfly cycle size
+		persistent:   false,   // if true: board is NOT cleared between antes (hardcore mode)
 	},
 
 	startRogueRun: function () {
@@ -771,6 +781,7 @@ const Game = {
 		rr.shieldCharges = 0;
 		rr.mergeCount    = 0;
 		rr.cycleSize     = 0;
+		rr.persistent    = Game.settings.gameMode === 'hardroguerun';
 
 		// Show rogue status bar, hide normal status
 		document.getElementById('game-status').style.display = 'none';
@@ -996,9 +1007,11 @@ const Game = {
 	startNextAnte: function () {
 		document.getElementById('shop-overlay').style.display = 'none';
 
-		// Remove all non-static bodies from world
-		const bodies = Composite.allBodies(engine.world).filter(b => !b.isStatic);
-		Composite.remove(engine.world, bodies);
+		// 通常ローグラン: 盤面クリア / ハードコア: フルーツを残す
+		if (!Game.rogueRun.persistent) {
+			const bodies = Composite.allBodies(engine.world).filter(b => !b.isStatic);
+			Composite.remove(engine.world, bodies);
+		}
 
 		// Reset per-ante state
 		Game.rogueRun.anteIndex++;
@@ -1176,7 +1189,8 @@ const Game = {
 
 		// ── Helper: get final score to save (roguerun uses totalScore) ──
 		const getFinalSaveScore = () =>
-			Game.settings.gameMode === 'roguerun' ? Game.rogueRun.totalScore : Game.score;
+			(Game.settings.gameMode === 'roguerun' || Game.settings.gameMode === 'hardroguerun')
+				? Game.rogueRun.totalScore : Game.score;
 
 		// ── Helper: save to both local and online leaderboard ──
 		const saveScores = async (name) => {
@@ -1388,7 +1402,7 @@ const Game = {
 			Game.startTimer();
 		} else if (Game.settings.gameMode === 'challenge') {
 			Game.pickChallenge();
-		} else if (Game.settings.gameMode === 'roguerun') {
+		} else if (Game.settings.gameMode === 'roguerun' || Game.settings.gameMode === 'hardroguerun') {
 			Game.startRogueRun();
 		}
 
@@ -1592,7 +1606,7 @@ const Game = {
 	generateFruitBody: function (x, y, sizeIndex, extraConfig = {}) {
 		const size = Game.fruitSizes[sizeIndex];
 		const circle = Bodies.circle(x, y, size.radius, {
-			...friction,
+			...fruitPhysics,
 			...extraConfig,
 			render: {
 				sprite: {
@@ -1682,7 +1696,8 @@ const wallProps = {
 const gameStatics = [
 	Bodies.rectangle(-(wallPad / 2), Game.height / 2, wallPad, Game.height, wallProps),
 	Bodies.rectangle(Game.width + (wallPad / 2), Game.height / 2, wallPad, Game.height, wallProps),
-	Bodies.rectangle(Game.width / 2, Game.height + (wallPad / 2) - statusBarHeight, Game.width, wallPad, wallProps),
+	Bodies.rectangle(Game.width / 2, Game.height + (wallPad / 2) - statusBarHeight, Game.width, wallPad,
+		{ ...wallProps, label: 'floor' }),
 ];
 
 const mouse = Mouse.create(render.canvas);
@@ -1693,6 +1708,24 @@ const mouseConstraint = MouseConstraint.create(engine, {
 render.mouse = mouse;
 
 Game.initGame();
+
+// ============================================================
+// 地面衝突時のバウンド抑制
+// フルーツ同士はrestitution: 0.2で弾むが、地面だけy速度を殺す
+// ============================================================
+Events.on(engine, 'collisionStart', function (event) {
+	event.pairs.forEach(pair => {
+		const { bodyA, bodyB } = pair;
+		const isFloor = b => b.label === 'floor';
+		const isFruit = b => !b.isStatic;
+
+		if (isFloor(bodyA) && isFruit(bodyB)) {
+			Matter.Body.setVelocity(bodyB, { x: bodyB.velocity.x, y: 0 });
+		} else if (isFloor(bodyB) && isFruit(bodyA)) {
+			Matter.Body.setVelocity(bodyA, { x: bodyA.velocity.x, y: 0 });
+		}
+	});
+});
 
 // ============================================================
 // FIXED-TIMESTEP PHYSICS LOOP
