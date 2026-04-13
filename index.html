@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐲リュウガゲーム（改）</title>
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="リュウガゲイ夢（改）になって帰ってきた！" />
+  <meta property="og:description" content="顔を合体させていくスイカゲーム風ゲーム。リュウガゲイ夢（改）で遊ぼう！" />
+  <meta property="og:image" content="https://tylermcdonald514.github.io/assets/img/bg-menu.png" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="リュウガゲイ夢（改）になって帰ってきた！" />
+  <meta name="twitter:description" content="顔を合体させていくスイカゲーム風ゲーム。リュウガゲイ夢（改）で遊ぼう！" />
+  <meta name="twitter:image" content="https://tylermcdonald514.github.io/assets/img/bg-menu.png" />
+
+  <style>
+    @import url(https://fonts.bunny.net/css?family=azeret-mono:400,700,900);
+
+    :root {
+      --col-bg: #FFD59D;
+      --col-bg-light: #FFDCAE;
+      --col-bg-lighter: #FFEEDB;
+      --col-primary: #FF5300;
+      --col-primary-dark: #FF2700;
+      --col-primary-light: #FF8800;
+      --col-shadow: rgba(0, 0, 0, 0.25);
+      --col-white: #fff;
+      --col-text: #333;
+      --col-text-muted: #666;
+      --col-canvas-bg: #ffdcae;
+    }
+
+    body.dark-mode {
+      --col-bg: #1a1a2e;
+      --col-bg-light: #16213e;
+      --col-bg-lighter: #0f2a4a;
+      --col-primary: #FF6B35;
+      --col-primary-dark: #FF4500;
+      --col-primary-light: #FF8C42;
+      --col-shadow: rgba(0, 0, 0, 0.6);
+      --col-white: #e8e8f8;
+      --col-text: #e8e8f8;
+      --col-text-muted: #aaa;
+      --col-canvas-bg: #1a1a2e;
+    }
+
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+    }
+
+    body {
+      background-color: var(--col-bg);
+      font-family: 'Azeret Mono', sans-serif;
+      transition: background-color 0.3s;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      height: 100vh;
+    }
+
+    #game-canvas { position: relative; }
+
+    #game-ui {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      user-select: none;
+      font-weight: 700;
+      display: none;
+      transform-origin: top left;
+    }
+
+    /* ===== SCORE ===== */
+    #game-score {
+      position: absolute;
+      width: 100%;
+      border-bottom: 2px dotted #333;
+      font-size: 84px;
+      font-weight: 900;
+      padding-left: 16px;
+      color: var(--col-bg-lighter);
+      text-shadow: 3px 3px 0 var(--col-primary), -3px -3px 0 var(--col-primary),
+                   -3px 3px 0 var(--col-primary), 3px -3px 0 var(--col-primary);
+      right: 0;
+    }
+
+    body.dark-mode #game-score {
+      color: #c8d8ff;
+    }
+
+    /* ===== TIMER (TIME ATTACK) ===== */
+    #timer-display {
+      position: absolute;
+      top: 4px;
+      right: 16px;
+      font-size: 72px;
+      font-weight: 900;
+      color: var(--col-bg-lighter);
+      text-shadow: 3px 3px 0 #5B8AF5, -3px -3px 0 #5B8AF5,
+                   -3px 3px 0 #5B8AF5,  3px -3px 0 #5B8AF5;
+      pointer-events: none;
+      text-align: right;
+    }
+
+    body.dark-mode #timer-display { color: #c8d8ff; }
+
+    #timer-display.urgent {
+      text-shadow: 3px 3px 0 #cc0000, -3px -3px 0 #cc0000,
+                   -3px 3px 0 #cc0000,  3px -3px 0 #cc0000;
+      animation: timerPulse 0.4s infinite alternate;
+    }
+
+    @keyframes timerPulse {
+      to { transform: scale(1.08); transform-origin: right top; }
+    }
+
+    /* ===== COMBO ===== */
+    #combo-display {
+      position: absolute;
+      top: 96px;
+      right: 16px;
+      text-align: right;
+      pointer-events: none;
+    }
+
+    #combo-count {
+      display: block;
+      font-size: 64px;
+      font-weight: 900;
+      color: var(--col-bg-lighter);
+      text-shadow: 3px 3px 0 #e6a700, -3px -3px 0 #e6a700,
+                   -3px 3px 0 #e6a700,  3px -3px 0 #e6a700;
+      line-height: 1;
+    }
+
+    body.dark-mode #combo-count { color: #ffe082; }
+
+    #combo-label {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      color: #e6a700;
+      margin-top: 2px;
+    }
+
+    @keyframes comboAppear {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    @keyframes comboFadeOut {
+      to { opacity: 0; transform: scale(0.8); }
+    }
+
+    /* ===== SCORE POPUPS ===== */
+    #score-popups {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .score-popup {
+      position: absolute;
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--col-primary);
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.25);
+      white-space: nowrap;
+      pointer-events: none;
+      animation: scoreFloat 0.85s ease-out forwards;
+    }
+
+    .score-popup.combo-popup {
+      color: #e6a700;
+      font-size: 22px;
+    }
+
+    @keyframes scoreFloat {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      60%  { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-70px) scale(1.25); }
+    }
+
+    /* ===== CHALLENGE BANNER ===== */
+    #challenge-display {
+      position: absolute;
+      top: 92px;
+      left: 16px;
+      max-width: 340px;
+      background: rgba(0, 0, 0, 0.65);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 16px;
+      pointer-events: none;
+      transition: background 0.35s, box-shadow 0.35s;
+    }
+
+    #challenge-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    #challenge-title {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    #challenge-num {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.5px;
+    }
+
+    #challenge-text {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    #challenge-progress {
+      font-size: 12px;
+      color: var(--col-primary-light);
+      margin-top: 4px;
+    }
+
+    #challenge-reward {
+      font-size: 12px;
+      font-weight: 900;
+      color: #ffd54f;
+      margin-top: 3px;
+      opacity: 0.9;
+    }
+
+    /* hard challenge */
+    #challenge-display.hard {
+      background: rgba(140, 15, 15, 0.82);
+      box-shadow: 0 0 14px rgba(255, 60, 60, 0.5);
+    }
+
+    #challenge-display.hard #challenge-title { color: #ff9977; }
+    #challenge-display.hard #challenge-progress { color: #ffaa55; }
+
+    @keyframes hardAppear {
+      0%   { transform: scale(0.88); opacity: 0; }
+      60%  { transform: scale(1.04); opacity: 1; }
+      100% { transform: scale(1);    opacity: 1; }
+    }
+
+    #challenge-display.hard { animation: hardAppear 0.35s ease-out; }
+
+    #challenge-display.completed {
+      background: rgba(34, 160, 34, 0.88);
+      animation: challengeComplete 0.4s ease-out;
+    }
+
+    #challenge-display.hard.completed { box-shadow: 0 0 18px rgba(50, 220, 50, 0.6); }
+
+    @keyframes challengeComplete {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+
+    /* ===== CELEBRATION OVERLAY ===== */
+    #celebration-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    #celebration-text {
+      font-size: 42px;
+      font-weight: 900;
+      color: white;
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    @keyframes celebFlash {
+      0%   { background: rgba(255, 215, 0, 0.55); }
+      100% { background: rgba(255, 215, 0, 0); }
+    }
+
+    @keyframes celebText {
+      0%   { transform: scale(0.4); opacity: 1; }
+      50%  { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0; }
+    }
+
+    /* ===== GAME OVER MODAL ===== */
+    #game-end-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--col-shadow);
+    }
+
+    #game-end {
+      text-align: center;
+      padding: 28px 40px;
+      background-color: var(--col-bg-lighter);
+      border: 5px solid var(--col-primary);
+      box-shadow: 0 4px 32px var(--col-shadow);
+      border-radius: 32px;
+      margin: 0 auto;
+      pointer-events: initial;
+      user-select: initial;
+      max-height: 92%;
+      overflow-y: auto;
+      width: 520px;
+      max-width: 95%;
+    }
+
+    #game-end-title {
+      font-weight: 700;
+      font-size: 40px;
+      color: var(--col-primary-dark);
+    }
+
+    #game-end-score-display {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--col-text);
+      margin-top: 10px;
+    }
+
+    #game-end-challenge-result {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    #game-end-challenge-result.success {
+      background: rgba(34,160,34,0.15);
+      color: #228c22;
+    }
+
+    #game-end-challenge-result.fail {
+      background: rgba(200,50,50,0.1);
+      color: #c83232;
+    }
+
+    body.dark-mode #game-end-challenge-result.success { color: #6ddf6d; }
+    body.dark-mode #game-end-challenge-result.fail    { color: #f08080; }
+
+    #game-end-name-area { margin-top: 14px; }
+
+    #player-name-input {
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 20px;
+      padding: 8px 14px;
+      border: 3px solid var(--col-primary-light);
+      border-radius: 12px;
+      background: var(--col-white);
+      color: var(--col-text);
+      width: 100%;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    #player-name-input:focus { border-color: var(--col-primary); }
+    #player-name-input::placeholder { color: #bbb; }
+
+    .game-end-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .game-end-btn {
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--col-white);
+      border: none;
+      border-radius: 14px;
+      padding: 12px 18px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 var(--col-shadow);
+      transition: background 0.1s, box-shadow 0.1s;
+    }
+
+    #game-end-restart    { background: var(--col-primary-light); }
+    #game-end-restart:hover { background: var(--col-primary); box-shadow: 6px 6px 0 var(--col-shadow); }
+
+    #btn-show-leaderboard-end     { background: #5B8AF5; }
+    #btn-show-leaderboard-end:hover { background: #3a68d4; box-shadow: 6px 6px 0 var(--col-shadow); }
+
+    #btn-go-menu     { background: #666; }
+    #btn-go-menu:hover { background: #444; box-shadow: 6px 6px 0 var(--col-shadow); }
+
+    /* Stats section */
+    #stats-section { margin-top: 14px; }
+
+    #stats-toggle {
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      background: none;
+      border: 2px solid var(--col-primary-light);
+      border-radius: 8px;
+      padding: 5px 12px;
+      cursor: pointer;
+      color: var(--col-primary);
+    }
+
+    #stats-toggle:hover { background: rgba(255,83,0,0.08); }
+
+    #stats-content {
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .stats-row {
+      display: flex;
+      align-items: center;
+      padding: 6px 8px;
+      border-radius: 10px;
+      margin-bottom: 5px;
+      background: var(--col-bg-light);
+      gap: 10px;
+    }
+
+    .stats-icon { width: 28px; height: 28px; flex-shrink: 0; }
+
+    .stats-label { font-size: 13px; color: var(--col-text-muted); flex-shrink: 0; width: 56px; }
+
+    .stats-bar-wrap {
+      flex: 1;
+      height: 8px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .stats-bar {
+      height: 100%;
+      background: var(--col-primary-light);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .stats-count {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--col-primary-dark);
+      width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Share buttons */
+    .share-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      justify-content: center;
+    }
+
+    .share-btn {
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--col-bg-light);
+      border: 2px solid var(--col-primary-light);
+      border-radius: 10px;
+      padding: 7px 12px;
+      cursor: pointer;
+      color: var(--col-text);
+      transition: background 0.1s;
+    }
+
+    .share-btn:hover { background: var(--col-primary-light); color: white; }
+
+    /* ===== SETTINGS OVERLAY ===== */
+    .modal-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.55);
+      pointer-events: initial;
+    }
+
+    .modal-panel {
+      background: var(--col-bg-lighter);
+      border: 5px solid var(--col-primary);
+      border-radius: 32px;
+      padding: 32px 40px;
+      box-shadow: 0 4px 32px var(--col-shadow);
+      width: 480px;
+      max-width: 92%;
+    }
+
+    .modal-title {
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--col-primary-dark);
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .modal-close-btn {
+      display: block;
+      width: 100%;
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--col-white);
+      background: var(--col-primary-light);
+      border: none;
+      border-radius: 16px;
+      padding: 12px;
+      cursor: pointer;
+      margin-top: 16px;
+      box-shadow: 4px 4px 0 var(--col-shadow);
+      transition: background 0.1s;
+    }
+
+    .modal-close-btn:hover { background: var(--col-primary); }
+
+    /* Settings rows */
+    .settings-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+
+    .settings-row label.row-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--col-text);
+      width: 64px;
+      flex-shrink: 0;
+    }
+
+    .settings-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--col-primary);
+      cursor: pointer;
+      height: 6px;
+      touch-action: manipulation; /* prevents scroll interference on mobile */
+      -webkit-appearance: none;
+      min-width: 0;
+    }
+
+    /* Mobile-friendly range thumb */
+    .settings-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--col-primary);
+      cursor: pointer;
+    }
+
+    .settings-row input[type="range"]::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(0,0,0,0.15);
+    }
+
+    .vol-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--col-primary);
+      width: 40px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Toggle switch */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #ccc;
+      border-radius: 26px;
+      transition: 0.25s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.25s;
+    }
+
+    input:checked + .toggle-slider { background: var(--col-primary); }
+    input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+    .toggle-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--col-text-muted);
+    }
+
+    /* ===== LEADERBOARD TABS ===== */
+    .lb-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      justify-content: center;
+    }
+
+    .lb-tab-btn {
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 7px 16px;
+      border: 2px solid var(--col-primary-light);
+      border-radius: 12px;
+      background: var(--col-bg-light);
+      color: var(--col-text);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .lb-tab-btn.active {
+      background: var(--col-primary);
+      border-color: var(--col-primary-dark);
+      color: white;
+    }
+
+    .lb-tab-btn:hover:not(.active) {
+      background: var(--col-primary-light);
+      color: white;
+    }
+
+    /* ===== LEADERBOARD OVERLAY ===== */
+    #leaderboard-list { margin-bottom: 8px; }
+
+    .lb-empty {
+      text-align: center;
+      color: var(--col-text-muted);
+      font-size: 16px;
+      padding: 20px 0;
+    }
+
+    .lb-row {
+      display: flex;
+      align-items: center;
+      padding: 9px 10px;
+      border-radius: 12px;
+      margin-bottom: 6px;
+      background: var(--col-bg-light);
+      gap: 10px;
+    }
+
+    .lb-row.lb-first { background: var(--col-primary-light); color: white; }
+
+    .lb-rank { font-size: 18px; width: 34px; flex-shrink: 0; text-align: center; }
+    .lb-name { flex: 1; font-size: 16px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lb-score { font-size: 18px; font-weight: 900; color: var(--col-primary-dark); width: 60px; text-align: right; flex-shrink: 0; }
+    .lb-date  { font-size: 11px; color: var(--col-text-muted); width: 68px; text-align: right; flex-shrink: 0; }
+    .lb-first .lb-score { color: white; }
+    .lb-first .lb-date  { color: rgba(255,255,255,0.75); }
+
+    /* ===== STATUS BAR ===== */
+    #game-status {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 48px;
+      background-color: var(--col-bg-lighter);
+      display: flex;
+      align-items: center;
+    }
+
+    .game-status-item {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+    }
+
+    .game-status-label {
+      color: var(--col-text-muted);
+      font-size: 14px;
+      margin-left: 14px;
+      margin-right: 6px;
+    }
+
+    #game-highscore-value {
+      color: var(--col-text);
+      font-weight: 700;
+      font-size: 21px;
+    }
+
+    #game-next-fruit, #game-current-fruit { width: 38px; height: 38px; }
+
+    .status-spacer { flex: 1; }
+
+    /* ===== MENU UI (mode selector) ===== */
+    #menu-ui {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      transform-origin: top left;
+    }
+
+    #mode-selector {
+      position: absolute;
+      bottom: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      pointer-events: initial;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 580px;
+      padding: 0 12px;
+    }
+
+    .mode-btn {
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 10px 18px;
+      border: 3px solid var(--col-primary-light);
+      border-radius: 18px;
+      background: rgba(255, 238, 219, 0.92);
+      color: var(--col-primary-dark);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+      box-shadow: 3px 3px 0 var(--col-shadow);
+    }
+
+    .mode-btn:hover {
+      background: var(--col-primary-light);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 3px 5px 0 var(--col-shadow);
+    }
+
+    .mode-btn.active {
+      background: var(--col-primary);
+      color: white;
+      border-color: var(--col-primary-dark);
+      box-shadow: 3px 3px 0 var(--col-primary-dark);
+    }
+
+    body.dark-mode .mode-btn {
+      background: rgba(15, 42, 74, 0.92);
+      color: var(--col-primary-light);
+    }
+
+    body.dark-mode .mode-btn.active {
+      background: var(--col-primary);
+      color: white;
+    }
+
+    .status-icon-btn {
+      pointer-events: initial;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px 7px;
+      border-radius: 8px;
+      transition: background 0.15s;
+      margin-right: 4px;
+      line-height: 1;
+    }
+
+    .status-icon-btn:hover { background: rgba(0,0,0,0.1); }
+
+    /* ===== ROGUELIKE STATUS BAR ===== */
+    #rogue-status {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 48px;
+      background: rgba(10, 10, 30, 0.88);
+      display: none;
+      align-items: center;
+      padding: 0 10px;
+      gap: 8px;
+      color: white;
+      font-weight: 700;
+    }
+
+    #rogue-ante-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    #rogue-progress-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    #rogue-progress-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    #rogue-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--col-primary-light), #ffd54f);
+      border-radius: 4px;
+      transition: width 0.3s;
+      width: 0%;
+    }
+
+    #rogue-progress-text {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      margin-top: 1px;
+    }
+
+    #rogue-coins-display {
+      font-size: 14px;
+      color: #ffd54f;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    #rogue-joker-slots {
+      display: flex;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .rogue-joker-icon {
+      font-size: 15px;
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 5px;
+      border: 1.5px solid;
+      pointer-events: initial;
+      cursor: default;
+    }
+
+    .rogue-joker-icon.rarity-common    { border-color: #aaa;    background: rgba(200,200,200,0.12); }
+    .rogue-joker-icon.rarity-uncommon  { border-color: #5B8AF5; background: rgba(91,138,245,0.12); }
+    .rogue-joker-icon.rarity-rare      { border-color: #ffd54f; background: rgba(255,213,79,0.12);
+                                          box-shadow: 0 0 5px rgba(255,213,79,0.4); }
+    .rogue-joker-icon.rarity-epic      { border-color: #a855f7; background: rgba(168,85,247,0.18);
+                                          box-shadow: 0 0 7px rgba(168,85,247,0.6); }
+    .rogue-joker-icon.rarity-legendary { border-color: #f59e0b; background: rgba(245,158,11,0.18);
+                                          box-shadow: 0 0 10px rgba(245,158,11,0.7), 0 0 20px rgba(245,158,11,0.3); }
+
+    .rogue-joker-empty {
+      width: 26px; height: 26px;
+      border-radius: 5px;
+      border: 1.5px dashed rgba(255,255,255,0.18);
+    }
+
+    /* ===== SHOP OVERLAY ===== */
+    #shop-overlay .modal-panel {
+      max-height: 88%;
+      overflow-y: auto;
+    }
+
+    #shop-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    #shop-title { font-size: 22px; font-weight: 900; color: var(--col-primary-dark); }
+    #shop-coins-display { font-size: 18px; font-weight: 900; color: #c67c00; }
+
+    .joker-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      background: var(--col-bg-light);
+      border: 2px solid transparent;
+      margin-bottom: 10px;
+    }
+
+    .joker-card.rarity-common    { border-color: #ccc; }
+    .joker-card.rarity-uncommon  { border-color: #5B8AF5; }
+    .joker-card.rarity-rare      { border-color: #ffd54f; box-shadow: 0 0 10px rgba(255,213,79,0.22); }
+    .joker-card.rarity-epic      { border-color: #a855f7; box-shadow: 0 0 14px rgba(168,85,247,0.35); }
+    .joker-card.rarity-legendary { border-color: #f59e0b; box-shadow: 0 0 18px rgba(245,158,11,0.45); }
+
+    .joker-card-emoji { font-size: 32px; flex-shrink: 0; }
+
+    .joker-card-info { flex: 1; min-width: 0; }
+
+    .joker-card-name { font-size: 15px; font-weight: 700; color: var(--col-text); }
+
+    .joker-rarity-badge {
+      display: inline-block;
+      font-size: 10px; font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 5px;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+
+    .joker-rarity-badge.common    { background: #eee; color: #666; }
+    .joker-rarity-badge.uncommon  { background: #dde8ff; color: #3a68d4; }
+    .joker-rarity-badge.rare      { background: #fff4cc; color: #c67c00; }
+    .joker-rarity-badge.epic      { background: #f3e8ff; color: #7c3aed; }
+    .joker-rarity-badge.legendary { background: #fef3c7; color: #b45309; font-style: italic; }
+
+    .joker-card-desc { font-size: 12px; color: var(--col-text-muted); margin-top: 4px; line-height: 1.4; }
+
+    .joker-buy-btn {
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 13px; font-weight: 700;
+      padding: 8px 12px;
+      background: var(--col-primary);
+      color: white; border: none;
+      border-radius: 10px; cursor: pointer;
+      white-space: nowrap; flex-shrink: 0;
+      transition: background 0.1s;
+    }
+
+    .joker-buy-btn:hover:not(:disabled) { background: var(--col-primary-dark); }
+    .joker-buy-btn:disabled { background: #bbb; cursor: not-allowed; color: #888; }
+
+    #shop-skip-btn {
+      display: block; width: 100%;
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 17px; font-weight: 700;
+      padding: 12px;
+      background: #5B8AF5; color: white;
+      border: none; border-radius: 16px; cursor: pointer;
+      box-shadow: 4px 4px 0 var(--col-shadow);
+      transition: background 0.1s;
+      margin-top: 6px;
+    }
+
+    #shop-skip-btn:hover { background: #3a68d4; }
+
+    /* ===== LEADERBOARD MODE TABS ===== */
+    .lb-mode-tabs {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .lb-mode-btn {
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 11px; font-weight: 700;
+      padding: 4px 9px;
+      border: 1.5px solid var(--col-text-muted);
+      border-radius: 7px;
+      background: transparent;
+      color: var(--col-text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .lb-mode-btn.active {
+      background: var(--col-primary);
+      border-color: var(--col-primary);
+      color: white;
+    }
+
+    .lb-mode-btn:hover:not(.active) { border-color: var(--col-primary-light); color: var(--col-primary-light); }
+
+    /* ===== MENU LEADERBOARD BUTTON ===== */
+    #menu-lb-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-family: 'Azeret Mono', sans-serif;
+      font-size: 14px; font-weight: 700;
+      padding: 7px 14px;
+      border: 2px solid rgba(255,255,255,0.45);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.28);
+      color: white;
+      cursor: pointer;
+      pointer-events: initial;
+      transition: all 0.15s;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.25);
+      white-space: nowrap;
+    }
+
+    #menu-lb-btn:hover { background: rgba(0,0,0,0.48); border-color: white; }
+
+    /* ===== RELIC TOOLTIP ===== */
+    #relic-tooltip {
+      position: absolute;
+      bottom: 58px;
+      right: 10px;
+      max-width: 220px;
+      background: rgba(10,10,30,0.96);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: white;
+      font-size: 12px;
+      line-height: 1.5;
+      pointer-events: none;
+      z-index: 999;
+      display: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    #relic-tooltip-name {
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="game-canvas">
+      <div id="game-ui">
+
+        <p id="game-score"></p>
+
+        <!-- Time Attack Timer -->
+        <div id="timer-display" style="display:none">
+          <span id="timer-value">60</span>
+        </div>
+
+        <!-- Combo Display -->
+        <div id="combo-display" style="display:none">
+          <span id="combo-count">2</span>
+          <span id="combo-label">COMBO!</span>
+        </div>
+
+        <!-- Score Popups -->
+        <div id="score-popups"></div>
+
+        <!-- Challenge Banner -->
+        <div id="challenge-display" style="display:none">
+          <div id="challenge-header">
+            <div id="challenge-title">CHALLENGE</div>
+            <div id="challenge-num"></div>
+          </div>
+          <div id="challenge-text"></div>
+          <div id="challenge-progress"></div>
+          <div id="challenge-reward"></div>
+        </div>
+
+        <!-- Max Fruit Celebration -->
+        <div id="celebration-overlay" style="display:none">
+          <div id="celebration-text">🎊 最大フルーツ！ 🎊</div>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div id="game-end-container">
+          <div id="game-end">
+            <div id="game-end-title">人生やりなおせ</div>
+            <div id="game-end-score-display"></div>
+            <div id="game-end-challenge-result" style="display:none"></div>
+            <div id="game-end-name-area">
+              <input type="text" id="player-name-input" placeholder="名前を入力 (任意)" maxlength="12" />
+            </div>
+            <div class="game-end-buttons">
+              <button class="game-end-btn" id="game-end-restart">もう一度頑張ろう</button>
+              <button class="game-end-btn" id="btn-show-leaderboard-end">🏆 ランキング</button>
+              <button class="game-end-btn" id="btn-go-menu">🏠 メニューへ</button>
+            </div>
+            <!-- Stats -->
+            <div id="stats-section">
+              <button id="stats-toggle">📊 詳細統計を見る</button>
+              <div id="stats-content" style="display:none"></div>
+            </div>
+            <!-- Share -->
+            <div class="share-buttons">
+              <button class="share-btn" id="btn-copy-score">📋 スコアをコピー</button>
+              <button class="share-btn" id="btn-screenshot">📸 画像保存</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Overlay -->
+        <div id="settings-overlay" class="modal-overlay" style="display:none">
+          <div class="modal-panel">
+            <div class="modal-title">⚙ 設定</div>
+
+            <div class="settings-row">
+              <label class="row-label">BGM</label>
+              <input type="range" id="bgm-volume" min="0" max="100" step="1" value="50" />
+              <span class="vol-value" id="bgm-volume-label">50%</span>
+            </div>
+
+            <div class="settings-row">
+              <label class="row-label">SE</label>
+              <input type="range" id="sfx-volume" min="0" max="100" step="1" value="5" />
+              <span class="vol-value" id="sfx-volume-label">5%</span>
+            </div>
+
+            <div class="settings-row">
+              <label class="row-label">テーマ</label>
+              <div class="toggle-wrap">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="dark-mode-toggle" />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label" id="dark-mode-label">ライト</span>
+              </div>
+            </div>
+
+            <button class="modal-close-btn" id="settings-close">閉じる</button>
+          </div>
+        </div>
+
+        <!-- Leaderboard Overlay -->
+        <div id="leaderboard-overlay" class="modal-overlay" style="display:none">
+          <div class="modal-panel">
+            <div class="modal-title">🏆 ランキング</div>
+            <!-- Mode tabs -->
+            <div class="lb-mode-tabs">
+              <button class="lb-mode-btn active" data-lbmode="normal">ノーマル</button>
+              <button class="lb-mode-btn" data-lbmode="timeattack">⏱ TA</button>
+              <button class="lb-mode-btn" data-lbmode="challenge">🎯 チャレンジ</button>
+              <button class="lb-mode-btn" data-lbmode="roguerun">🏃 ローグラン</button>
+            </div>
+            <!-- Source tabs -->
+            <div class="lb-tabs">
+              <button class="lb-tab-btn active" id="lb-tab-local">💾 ローカル</button>
+              <button class="lb-tab-btn" id="lb-tab-online">🌐 オンライン</button>
+            </div>
+            <div id="leaderboard-list"></div>
+            <button class="modal-close-btn" id="leaderboard-close">閉じる</button>
+          </div>
+        </div>
+
+        <!-- Shop Overlay (Roguelike) -->
+        <div id="shop-overlay" class="modal-overlay" style="display:none">
+          <div class="modal-panel">
+            <div id="shop-header">
+              <div id="shop-title">🛒 ショップ</div>
+              <div id="shop-coins-display">🪙 0</div>
+            </div>
+            <div id="shop-offers"></div>
+            <button id="shop-skip-btn">次の Ante へ →</button>
+          </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div id="game-status">
+          <div class="game-status-item">
+            <div class="game-status-label">Best</div>
+            <div id="game-highscore-value">0</div>
+          </div>
+          <div class="game-status-item">
+            <div class="game-status-label">Next</div>
+            <img id="game-next-fruit" src="./assets/img/circle0.png" />
+          </div>
+          <div class="game-status-item">
+            <div class="game-status-label">Now</div>
+            <img id="game-current-fruit" src="./assets/img/circle0.png" />
+          </div>
+          <div class="status-spacer"></div>
+          <button class="status-icon-btn" id="btn-home" title="メニューへ">🏠</button>
+          <button class="status-icon-btn" id="btn-leaderboard" title="ランキング">🏆</button>
+          <button class="status-icon-btn" id="btn-settings" title="設定">⚙</button>
+        </div>
+
+        <!-- Relic Tooltip -->
+        <div id="relic-tooltip">
+          <div id="relic-tooltip-name"></div>
+          <div id="relic-tooltip-desc"></div>
+        </div>
+
+        <!-- Roguelike Status Bar (replaces normal status bar during roguerun) -->
+        <div id="rogue-status">
+          <div id="rogue-ante-label">ANTE 1/5</div>
+          <div id="rogue-progress-wrap">
+            <div id="rogue-progress-bar"><div id="rogue-progress-fill"></div></div>
+            <div id="rogue-progress-text">0 / 150</div>
+          </div>
+          <div id="rogue-coins-display">🪙 0</div>
+          <div class="status-spacer"></div>
+          <div id="rogue-joker-slots"></div>
+          <button class="status-icon-btn" id="btn-rogue-home" title="メニューへ">🏠</button>
+          <button class="status-icon-btn" id="btn-settings-rogue" title="設定">⚙</button>
+        </div>
+
+      </div>
+
+      <!-- Menu UI (mode selector, shown before game starts) -->
+      <div id="menu-ui">
+        <div id="mode-selector">
+          <button class="mode-btn active" data-mode="normal">ノーマル</button>
+          <button class="mode-btn" data-mode="timeattack">⏱ タイムアタック</button>
+          <button class="mode-btn" data-mode="challenge">🎯 チャレンジ</button>
+          <button class="mode-btn" data-mode="roguerun">🏃 ローグラン</button>
+        </div>
+        <button id="menu-lb-btn">🏆 ランキング</button>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="./matter.js"></script>
+  <script type="text/javascript" src="./index.js?v=12"></script>
+</body>
+</html>
