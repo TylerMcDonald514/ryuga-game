@@ -764,6 +764,7 @@ const Game = {
 		mergeCount:   0,       // total merges this ante (for meteor relic)
 		cycleSize:    0,       // current butterfly cycle size
 		persistent:   false,   // if true: board is NOT cleared between antes (hardcore mode)
+		anteStartTime: 0,      // timestamp of last ante start (for grace period in hardcore)
 	},
 
 	startRogueRun: function () {
@@ -1037,6 +1038,15 @@ const Game = {
 			{ isStatic: true }
 		);
 		Composite.add(engine.world, Game.elements.previewBall);
+
+		// ハードコアモード: 上限を超えているフルーツを安全に削除してからAnteを開始
+		if (Game.rogueRun.persistent) {
+			const overLimit = Composite.allBodies(engine.world).filter(
+				b => !b.isStatic && (b.position.y - (b.circleRadius || 0)) < loseHeight + 20
+			);
+			if (overLimit.length) Composite.remove(engine.world, overLimit);
+			Game.rogueRun.anteStartTime = performance.now();
+		}
 
 		// Resume
 		physicsEnabled = true;
@@ -1459,14 +1469,7 @@ const Game = {
 				if (bodyA.popped || bodyB.popped) continue;
 
 				const sizeIndex = bodyA.sizeIndex;
-				let newSize = sizeIndex + 1;
-				const isMaxMerge = (newSize === Game.fruitSizes.length - 1);
-
-				if (bodyA.circleRadius >= Game.fruitSizes[Game.fruitSizes.length - 1].radius) {
-					newSize = 0;
-				}
-
-				Game.fruitsMerged[sizeIndex] += 1;
+				const isMaxSize = (sizeIndex === Game.fruitSizes.length - 1);  // 最大サイズ同士の合体？
 
 				const midX = (bodyA.position.x + bodyB.position.x) / 2;
 				const midY = (bodyA.position.y + bodyB.position.y) / 2;
@@ -1474,30 +1477,51 @@ const Game = {
 				bodyA.popped = true;
 				bodyB.popped = true;
 
+				Game.fruitsMerged[sizeIndex] += 1;
 				Game.sounds[`pop${sizeIndex}`].play();
-				Composite.remove(engine.world, [bodyA, bodyB]);
-				Composite.add(engine.world, Game.generateFruitBody(midX, midY, newSize));
-				Game.addPop(midX, midY, bodyA.circleRadius);
 
-				// Score popup & combo
-				Game.addScorePopup(midX, midY, sizeIndex);
-				Game.handleCombo(sizeIndex);
+				if (isMaxSize) {
+					// 最大サイズ同士の合体: スコア加算して消滅（スイカゲーム仕様）
+					const scoreValue = Game.fruitSizes[sizeIndex].scoreValue;
+					Game.extraPoints += scoreValue;
 
-				// Relic merge effects (roguerun)
-				if (Game.rogueRun.active) {
-					const relicBonus = Game.applyRelicMergeEffect(sizeIndex, midX, midY);
-					if (relicBonus > 0) Game.extraPoints += relicBonus;
-					Game.rogueRun.coins += 1; // 1 coin per merge baseline
-					Game.updateRogueHud();
+					Composite.remove(engine.world, [bodyA, bodyB]);
+					Game.addPop(midX, midY, bodyA.circleRadius);
+					Game.addScorePopup(midX, midY, sizeIndex);
+					Game.handleCombo(sizeIndex);
+
+					if (Game.rogueRun.active) {
+						const relicBonus = Game.applyRelicMergeEffect(sizeIndex, midX, midY);
+						if (relicBonus > 0) Game.extraPoints += relicBonus;
+						Game.rogueRun.coins += 1;
+						Game.updateRogueHud();
+					}
+
+					Game.calculateScore();
+					if (Game.settings.gameMode === 'challenge') Game.checkChallenge();
+					Game.showCelebration('✨ 最大フルーツ合体！消滅！✨');
+				} else {
+					// 通常の合体: 次のサイズフルーツ生成
+					const newSize = sizeIndex + 1;
+					const isMaxMerge = (newSize === Game.fruitSizes.length - 1);
+
+					Composite.remove(engine.world, [bodyA, bodyB]);
+					Composite.add(engine.world, Game.generateFruitBody(midX, midY, newSize));
+					Game.addPop(midX, midY, bodyA.circleRadius);
+					Game.addScorePopup(midX, midY, sizeIndex);
+					Game.handleCombo(sizeIndex);
+
+					if (Game.rogueRun.active) {
+						const relicBonus = Game.applyRelicMergeEffect(sizeIndex, midX, midY);
+						if (relicBonus > 0) Game.extraPoints += relicBonus;
+						Game.rogueRun.coins += 1;
+						Game.updateRogueHud();
+					}
+
+					Game.calculateScore();
+					if (Game.settings.gameMode === 'challenge') Game.checkChallenge();
+					if (isMaxMerge) Game.showCelebration('🎊 次は最大フルーツ！ 🎊');
 				}
-
-				Game.calculateScore();
-
-				// Challenge check
-				if (Game.settings.gameMode === 'challenge') Game.checkChallenge();
-
-				// Max fruit celebration
-				if (isMaxMerge) Game.showCelebration('🎊 最大フルーツ！ 🎊');
 			}
 		});
 	},
@@ -1521,6 +1545,10 @@ const Game = {
 
 	loseGame: function () {
 		if (Game.stateIndex === GameStates.LOSE || Game.stateIndex === GameStates.SHOP) return;
+
+		// ハードコアモード: Ante開始直後1.5秒間は猶予（フルーツが安定するまで）
+		if (Game.rogueRun.active && Game.rogueRun.persistent &&
+		    performance.now() - Game.rogueRun.anteStartTime < 1500) return;
 
 		// ── Shield charges (roguerun only) ──────────────────────
 		if (Game.rogueRun.active && Game.rogueRun.shieldCharges > 0) {
