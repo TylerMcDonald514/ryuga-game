@@ -56,59 +56,59 @@ const GameStates = {
 // ============================================================
 const RELIC_DEFS = [
 	// ── COMMON (5) ──────────────────────────────────────────
-	{ id: 'coin_magnet',   name: 'コイン磁石',    emoji: '🧲', rarity: 'common',    cost: 2,
+	{ id: 'coin_magnet',   name: 'コイン磁石',    emoji: '🧲', rarity: 'common',    cost: 10,
 	  desc: '合体するたびにコイン+2' },
-	{ id: 'triple_merge',  name: '三連星',         emoji: '🌟', rarity: 'common',    cost: 3,
+	{ id: 'triple_merge',  name: '三連星',         emoji: '🌟', rarity: 'common',    cost: 10,
 	  desc: 'サイズ3以下の合体でコイン+3' },
-	{ id: 'size_down_pts', name: '精密打撃',       emoji: '🎯', rarity: 'common',    cost: 3,
+	{ id: 'size_down_pts', name: '精密打撃',       emoji: '🎯', rarity: 'common',    cost: 12,
 	  desc: 'サイズ2の合体で+15pts追加' },
-	{ id: 'lucky_cat',     name: '幸運の猫',       emoji: '🐱', rarity: 'common',    cost: 3,
+	{ id: 'lucky_cat',     name: '幸運の猫',       emoji: '🐱', rarity: 'common',    cost: 12,
 	  desc: '次フルーツが同じサイズになる確率+60%' },
-	{ id: 'moon',          name: '月の加護',       emoji: '🌙', rarity: 'common',    cost: 3,
+	{ id: 'moon',          name: '月の加護',       emoji: '🌙', rarity: 'common',    cost: 15,
 	  desc: '合体するたびに+5pts追加' },
 	// ── UNCOMMON (6) ────────────────────────────────────────
-	{ id: 'big_score',     name: '大金持ち',       emoji: '💰', rarity: 'uncommon',  cost: 4,
+	{ id: 'big_score',     name: '大金持ち',       emoji: '💰', rarity: 'uncommon',  cost: 30,
 	  desc: 'サイズ5以上の合体で+25pts追加' },
-	{ id: 'combo_master',  name: 'コンボマスター',  emoji: '🔥', rarity: 'uncommon',  cost: 4,
+	{ id: 'combo_master',  name: 'コンボマスター',  emoji: '🔥', rarity: 'uncommon',  cost: 35,
 	  desc: 'コンボボーナス×2' },
-	{ id: 'size_up',       name: 'サイズの恵み',   emoji: '⬆️', rarity: 'uncommon',  cost: 5,
+	{ id: 'size_up',       name: 'サイズの恵み',   emoji: '⬆️', rarity: 'uncommon',  cost: 40,
 	  desc: '30%の確率でフルーツが1サイズ大きくなる' },
-	{ id: 'rebirth',       name: '再誕',            emoji: '♻️', rarity: 'uncommon',  cost: 5,
+	{ id: 'rebirth',       name: '再誕',            emoji: '♻️', rarity: 'uncommon',  cost: 45,
 	  desc: '合体後15%の確率でサイズ1が出現' },
-	{ id: 'ante_bonus',    name: 'Anteボーナス',   emoji: '🎁', rarity: 'uncommon',  cost: 4,
+	{ id: 'ante_bonus',    name: 'Anteボーナス',   emoji: '🎁', rarity: 'uncommon',  cost: 30,
 	  desc: 'Ante開始時にスコア+50pt' },
-	{ id: 'diamond',       name: 'ダイヤの心',     emoji: '💎', rarity: 'uncommon',  cost: 4,
+	{ id: 'diamond',       name: 'ダイヤの心',     emoji: '💎', rarity: 'uncommon',  cost: 50,
 	  desc: '合体するたびに+10pts追加' },
 	// ── RARE (5) ────────────────────────────────────────────
-	{ id: 'golden7',       name: '黄金の7',        emoji: '⑦',  rarity: 'rare',      cost: 6,
+	{ id: 'golden7',       name: '黄金の7',        emoji: '⑦',  rarity: 'rare',      cost: 80,
 	  desc: 'サイズ7以上の合体スコア×3' },
-	{ id: 'gravity_heavy', name: '重力の申し子',    emoji: '🌍', rarity: 'rare',      cost: 6,
+	{ id: 'gravity_heavy', name: '重力の申し子',    emoji: '🌍', rarity: 'rare',      cost: 85,
 	  desc: '重力↑、その分合体ごとにコイン+1追加' },
-	{ id: 'lightning',     name: '雷光',            emoji: '⚡', rarity: 'rare',      cost: 6,
+	{ id: 'lightning',     name: '雷光',            emoji: '⚡', rarity: 'rare',      cost: 90,
 	  desc: 'サイズ3〜4の合体でコイン+4' },
-	{ id: 'shield',        name: '鉄壁の盾',        emoji: '🛡️', rarity: 'rare',      cost: 8,
+	{ id: 'shield',        name: '鉄壁の盾',        emoji: '🛡️', rarity: 'rare',      cost: 100,
 	  desc: 'ゲームオーバーを1回防ぐ（シールド+1）' },
-	{ id: 'crown',         name: '王冠',            emoji: '👑', rarity: 'rare',      cost: 8,
+	{ id: 'crown',         name: '王冠',            emoji: '👑', rarity: 'rare',      cost: 85,
 	  desc: 'このAnteのスコア目標を20%下げる' },
 	// ── EPIC (5) ────────────────────────────────────────────
-	{ id: 'trident',       name: '三叉の槍',        emoji: '🔱', rarity: 'epic',      cost: 8,
+	{ id: 'trident',       name: '三叉の槍',        emoji: '🔱', rarity: 'epic',      cost: 200,
 	  desc: 'サイズ2以上の合体でコイン+5' },
-	{ id: 'rainbow',       name: 'レインボー',      emoji: '🌈', rarity: 'epic',      cost: 9,
+	{ id: 'rainbow',       name: 'レインボー',      emoji: '🌈', rarity: 'epic',      cost: 160,
 	  desc: '20%の確率で合体スコア×3' },
-	{ id: 'meteor',        name: '流星',            emoji: '☄️', rarity: 'epic',      cost: 9,
+	{ id: 'meteor',        name: '流星',            emoji: '☄️', rarity: 'epic',      cost: 170,
 	  desc: '5回合体ごとにサイズ1のフルーツが降ってくる' },
-	{ id: 'butterfly',     name: '蝶の変化',        emoji: '🦋', rarity: 'epic',      cost: 10,
+	{ id: 'butterfly',     name: '蝶の変化',        emoji: '🦋', rarity: 'epic',      cost: 180,
 	  desc: 'ドロップするフルーツがサイズ1〜5を順番に循環する' },
-	{ id: 'asteroid',      name: '小惑星',          emoji: '🪨', rarity: 'epic',      cost: 8,
+	{ id: 'asteroid',      name: '小惑星',          emoji: '🪨', rarity: 'epic',      cost: 160,
 	  desc: 'Ante開始時にサイズ1のフルーツを3個出現させる' },
 	// ── LEGENDARY (4) ───────────────────────────────────────
-	{ id: 'alchemist',     name: '錬金術師',        emoji: '⚗️', rarity: 'legendary', cost: 10,
+	{ id: 'alchemist',     name: '錬金術師',        emoji: '⚗️', rarity: 'legendary', cost: 320,
 	  desc: 'Ante終了時、所持コインを全てスコアに変換(1コイン=5pt)' },
-	{ id: 'talisman',      name: 'タリスマン',      emoji: '🧿', rarity: 'legendary', cost: 12,
+	{ id: 'talisman',      name: 'タリスマン',      emoji: '🧿', rarity: 'legendary', cost: 350,
 	  desc: 'シールド+3（鉄壁の盾と重複可）' },
-	{ id: 'cosmos',        name: 'コスモス',        emoji: '🌌', rarity: 'legendary', cost: 14,
+	{ id: 'cosmos',        name: 'コスモス',        emoji: '🌌', rarity: 'legendary', cost: 420,
 	  desc: '全ての合体スコア×2' },
-	{ id: 'dragon',        name: '竜神の怒り',      emoji: '🐉', rarity: 'legendary', cost: 14,
+	{ id: 'dragon',        name: '竜神の怒り',      emoji: '🐉', rarity: 'legendary', cost: 480,
 	  desc: 'コンボボーナス×5（コンボマスターと重複時×10）' },
 ];
 
@@ -118,23 +118,56 @@ const MIN_ZONE_FOR_RARITY = { common: 1, uncommon: 1, rare: 1, epic: 2, legendar
 // ── ZONE CONFIG: 3 zones × 5 antes ──────────────────────────
 const ZONE_CONFIG = [
 	// Zone 1: 入門地帯
-	{ zone: 1, ante: 1, target: 120,  gravity: 1.0,  label: '🌱 Zone 1-1' },
-	{ zone: 1, ante: 2, target: 200,  gravity: 1.05, label: '🌱 Zone 1-2' },
-	{ zone: 1, ante: 3, target: 310,  gravity: 1.10, label: '🌱 Zone 1-3' },
-	{ zone: 1, ante: 4, target: 440,  gravity: 1.17, label: '🌱 Zone 1-4' },
-	{ zone: 1, ante: 5, target: 600,  gravity: 1.28, label: '🐉 Zone 1 BOSS' },
+	{ zone: 1, ante: 1, target: 320,  gravity: 1.0,  label: '🌱 Zone 1-1' },
+	{ zone: 1, ante: 2, target: 500,  gravity: 1.05, label: '🌱 Zone 1-2' },
+	{ zone: 1, ante: 3, target: 810,  gravity: 1.10, label: '🌱 Zone 1-3' },
+	{ zone: 1, ante: 4, target: 1200, gravity: 1.17, label: '🌱 Zone 1-4' },
+	{ zone: 1, ante: 5, target: 1500, gravity: 1.28, label: '🐉 Zone 1 BOSS' },
 	// Zone 2: 修練の地
-	{ zone: 2, ante: 1, target: 300,  gravity: 1.15, label: '🔥 Zone 2-1' },
-	{ zone: 2, ante: 2, target: 480,  gravity: 1.22, label: '🔥 Zone 2-2' },
-	{ zone: 2, ante: 3, target: 680,  gravity: 1.30, label: '🔥 Zone 2-3' },
-	{ zone: 2, ante: 4, target: 920,  gravity: 1.40, label: '🔥 Zone 2-4' },
-	{ zone: 2, ante: 5, target: 1200, gravity: 1.55, label: '🐉 Zone 2 BOSS' },
+	{ zone: 2, ante: 1, target: 1900, gravity: 1.15, label: '🔥 Zone 2-1' },
+	{ zone: 2, ante: 2, target: 2280, gravity: 1.22, label: '🔥 Zone 2-2' },
+	{ zone: 2, ante: 3, target: 2680, gravity: 1.30, label: '🔥 Zone 2-3' },
+	{ zone: 2, ante: 4, target: 2920, gravity: 1.40, label: '🔥 Zone 2-4' },
+	{ zone: 2, ante: 5, target: 3400, gravity: 1.55, label: '🐉 Zone 2 BOSS' },
 	// Zone 3: 伝説の頂
-	{ zone: 3, ante: 1, target: 600,  gravity: 1.35, label: '⚡ Zone 3-1' },
-	{ zone: 3, ante: 2, target: 900,  gravity: 1.45, label: '⚡ Zone 3-2' },
-	{ zone: 3, ante: 3, target: 1250, gravity: 1.58, label: '⚡ Zone 3-3' },
-	{ zone: 3, ante: 4, target: 1650, gravity: 1.74, label: '⚡ Zone 3-4' },
-	{ zone: 3, ante: 5, target: 2200, gravity: 1.95, label: '👑 FINAL BOSS' },
+	{ zone: 3, ante: 1, target: 4100, gravity: 1.35, label: '⚡ Zone 3-1' },
+	{ zone: 3, ante: 2, target: 5090, gravity: 1.45, label: '⚡ Zone 3-2' },
+	{ zone: 3, ante: 3, target: 6250, gravity: 1.58, label: '⚡ Zone 3-3' },
+	{ zone: 3, ante: 4, target: 7650, gravity: 1.74, label: '⚡ Zone 3-4' },
+	{ zone: 3, ante: 5, target: 9999, gravity: 1.95, label: '👑 FINAL BOSS' },
+];
+
+// ============================================================
+// ARCANA DEFINITIONS (12 cards, draw 1 per Ante)
+// ============================================================
+const ARCANA_DEFS = [
+	// ── COMMON (3) ──
+	{ id: 'fool',           name: 'The Fool',           emoji: '🃏', rarity: 'common',
+	  desc: 'このAnteの目標スコア -20%' },
+	{ id: 'magician',       name: 'The Magician',       emoji: '🎩', rarity: 'common',
+	  desc: '次3回のドロップが同じサイズ' },
+	{ id: 'high_priestess', name: 'The High Priestess', emoji: '🌙', rarity: 'common',
+	  desc: '合体時15%でコイン+3' },
+	// ── UNCOMMON (3) ──
+	{ id: 'emperor',        name: 'The Emperor',        emoji: '🔴', rarity: 'uncommon',
+	  desc: '全合体スコア ×1.5（このAnteのみ）' },
+	{ id: 'chariot',        name: 'The Chariot',        emoji: '🏎️', rarity: 'uncommon',
+	  desc: '重力 -25%（このAnteのみ）' },
+	{ id: 'hermit',         name: 'The Hermit',         emoji: '🕯️', rarity: 'uncommon',
+	  desc: 'ショップで1個無料（1回限り）' },
+	// ── RARE (6) ──
+	{ id: 'tower',          name: 'The Tower',          emoji: '🗼', rarity: 'rare',
+	  desc: '最大サイズ合体時にスコア×3' },
+	{ id: 'star',           name: 'The Star',           emoji: '⭐', rarity: 'rare',
+	  desc: '合体5回ごとにサイズ1を3個降下' },
+	{ id: 'moon_arcana',    name: 'The Moon',           emoji: '🌕', rarity: 'rare',
+	  desc: '次のフルーツが必ずサイズ7（1回のみ）' },
+	{ id: 'sun',            name: 'The Sun',            emoji: '☀️', rarity: 'rare',
+	  desc: 'このAnte中、コンボボーナス ×3' },
+	{ id: 'devil',          name: 'The Devil',          emoji: '😈', rarity: 'rare',
+	  desc: 'ボスAnteのみ デスリュウガ強化' },
+	{ id: 'world',          name: 'The World',          emoji: '🌍', rarity: 'rare',
+	  desc: '目標スコア達成時にコイン+100' },
 ];
 
 function escapeHtml(str) {
@@ -385,6 +418,20 @@ const Game = {
 
 	setNextFruitSize: function () {
 		const rr = Game.rogueRun;
+		// Magician arcana: force same size for N drops
+		if (rr.active && rr.arcana && rr.arcana.id === 'magician' && rr.arcanaState.magicianCount > 0) {
+			rr.arcanaState.magicianCount--;
+			// size stays the same - don't change currentFruitSize
+			Game.updateCurrentFruitDisplay();
+			return;
+		}
+		// Moon arcana: next drop is size 7
+		if (rr.active && rr.arcana && rr.arcana.id === 'moon_arcana' && rr.arcanaState.moonReady) {
+			rr.arcanaState.moonReady = false;
+			Game.currentFruitSize = Game.fruitSizes.length - 1;
+			Game.updateCurrentFruitDisplay();
+			return;
+		}
 		let size;
 
 		// Relic: butterfly → cycle through sizes 0-4 in order
@@ -458,6 +505,10 @@ const Game = {
 			if (Game.rogueRun.active) {
 				if (Game.rogueRun.relics.some(r => r.id === 'combo_master')) comboMult *= 2;
 				if (Game.rogueRun.relics.some(r => r.id === 'dragon'))       comboMult *= 5;
+				// Sun arcana: combo ×3 this ante
+				if (Game.rogueRun.arcana && Game.rogueRun.arcana.id === 'sun') {
+					comboMult = (comboMult || 1) * 3;
+				}
 			}
 			const bonus = Math.floor(Game.fruitSizes[sizeIndex].scoreValue * (Game.combo - 1) * 0.4 * comboMult);
 			if (bonus > 0) {
@@ -724,9 +775,15 @@ const Game = {
 		tmp.width  = src.width;
 		tmp.height = src.height;
 		const ctx = tmp.getContext('2d');
-		ctx.drawImage(src, 0, 0);
 
-		// Score overlay
+		try {
+			ctx.drawImage(src, 0, 0);
+		} catch (e) {
+			alert('スクリーンショットの保存に失敗しました（セキュリティ制限）');
+			return;
+		}
+
+		// スコアオーバーレイ
 		ctx.fillStyle = 'rgba(0,0,0,0.6)';
 		ctx.beginPath();
 		if (ctx.roundRect) ctx.roundRect(12, 12, 330, 96, 18);
@@ -739,10 +796,21 @@ const Game = {
 		ctx.fillStyle = 'rgba(255,255,255,0.75)';
 		ctx.fillText('リュウガゲイ夢（改）', 24, 102);
 
-		const link = document.createElement('a');
-		link.download = `ryugagay-${Game.score}.png`;
-		link.href = tmp.toDataURL('image/png');
-		link.click();
+		try {
+			const dataUrl = tmp.toDataURL('image/png');
+			const link = document.createElement('a');
+			link.download = `ryugagay-${Game.score}.png`;
+			link.href = dataUrl;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		} catch (e) {
+			// フォールバック: 新しいタブで開く
+			const win = window.open('', '_blank');
+			if (win) {
+				win.document.write(`<img src="${tmp.toDataURL('image/png')}" style="max-width:100%">`);
+			}
+		}
 	},
 
 	// ── Roguelike Run ─────────────────────────────────────
@@ -763,8 +831,14 @@ const Game = {
 		shieldCharges: 0,      // shield charges remaining (shield +1, talisman +3)
 		mergeCount:   0,       // total merges this ante (for meteor relic)
 		cycleSize:    0,       // current butterfly cycle size
-		persistent:   false,   // if true: board is NOT cleared between antes (hardcore mode)
-		anteStartTime: 0,      // timestamp of last ante start (for grace period in hardcore)
+		persistent:    false,   // if true: board is NOT cleared between antes (hardcore mode)
+		anteStartTime: 0,       // timestamp of last ante start (for grace period in hardcore)
+		// ── v14 additions ──
+		arcana:        null,    // current ante's arcana card (one of ARCANA_DEFS)
+		arcanaState:   {},      // per-arcana ephemeral state
+		rerollCount:   0,       // re-rolls used this shop phase
+		purgeUsed:     false,   // purge token used this ante
+		sellPending:   null,    // relic idx awaiting sell-confirm tap (Hardroguerun)
 	},
 
 	startRogueRun: function () {
@@ -783,6 +857,11 @@ const Game = {
 		rr.mergeCount    = 0;
 		rr.cycleSize     = 0;
 		rr.persistent    = Game.settings.gameMode === 'hardroguerun';
+		rr.arcana        = null;
+		rr.arcanaState   = {};
+		rr.rerollCount   = 0;
+		rr.purgeUsed     = false;
+		rr.sellPending   = null;
 
 		// Show rogue status bar, hide normal status
 		document.getElementById('game-status').style.display = 'none';
@@ -799,15 +878,22 @@ const Game = {
 		rr.anteInZone = cfg.ante;
 		rr.anteCleared = false;
 		rr.mergeCount  = 0;
+		rr.rerollCount = 0;
+		rr.purgeUsed   = false;
+		rr.sellPending = null;
+
+		// ── Draw Arcana ──
+		Game.drawArcana();
 
 		// Score target (crown relic: -20%)
 		let target = cfg.target;
 		if (rr.relics.some(r => r.id === 'crown')) target = Math.round(target * 0.8);
 		rr.scoreTarget = target;
 
-		// Gravity (gravity_heavy relic adds 0.28)
+		// Gravity (gravity_heavy relic adds 0.28; chariot arcana -25%)
 		let g = cfg.gravity;
 		if (rr.relics.some(r => r.id === 'gravity_heavy')) g += 0.28;
+		if (rr.arcana && rr.arcana.id === 'chariot') g *= 0.75;
 		engine.gravity.y = g;
 
 		// ante_bonus relic: +50pts at ante start
@@ -851,7 +937,7 @@ const Game = {
 				? `<sup style="font-size:9px;line-height:1;vertical-align:top">${rr.shieldCharges}</sup>` : '';
 			return `<span class="rogue-joker-icon rarity-${r.rarity}" data-relic-idx="${idx}">${r.emoji}${shieldBadge}</span>`;
 		}).join('');
-		const empties = Array(Math.max(0, 6 - rr.relics.length))
+		const empties = Array(Math.max(0, 7 - rr.relics.length))
 			.fill('<span class="rogue-joker-empty"></span>').join('');
 		slots.innerHTML = icons + empties;
 
@@ -883,6 +969,12 @@ const Game = {
 		// Accumulate score
 		rr.anteScores.push(Game.score);
 		rr.totalScore += Game.score;
+
+		// Stop boss ryuga if active
+		if (Game.bossRyuga.active) Game.stopBossRyuga();
+
+		// Arcana on-clear effect
+		Game.applyArcanaOnClear();
 
 		// Alchemist relic: convert coins to score on ante clear
 		if (rr.relics.some(r => r.id === 'alchemist') && rr.coins > 0) {
@@ -944,6 +1036,7 @@ const Game = {
 			if (!seen.has(relic.id)) { seen.add(relic.id); rr.shopOffers.push(relic); }
 		}
 
+		rr.rerollCount = 0;
 		Game.renderShop();
 		document.getElementById('shop-overlay').style.display = 'flex';
 	},
@@ -960,17 +1053,31 @@ const Game = {
 		document.getElementById('shop-skip-btn').innerText =
 			nextCfg ? `${nextCfg.label} へ →  (${nextLabel})` : '次の Zone へ →';
 
+		// Re-roll button
+		const rerollCost = rr.rerollCount === 0 ? 0 : (rr.zone === 1 ? 20 : rr.zone === 2 ? 25 : 30);
+		const rerollEl = document.getElementById('shop-reroll-btn');
+		if (rerollEl) {
+			rerollEl.innerText = rr.rerollCount === 0 ? '🔄 Reroll (無料)' : `🔄 Reroll (🪙${rerollCost})`;
+			rerollEl.disabled  = rr.coins < rerollCost;
+		}
+
 		const rarityLabel = {
 			common: 'コモン', uncommon: 'アンコモン', rare: 'レア',
 			epic: 'エピック', legendary: 'レジェンダリー'
 		};
+
+		// Hermit arcana: first offer is free
+		const hermitActive = rr.arcana && rr.arcana.id === 'hermit' && !rr.arcanaState.hermitUsed;
+
 		document.getElementById('shop-offers').innerHTML = rr.shopOffers.length === 0
 			? '<div class="lb-empty">購入可能なレリックがありません</div>'
 			: rr.shopOffers.map((r, i) => {
-				const canAfford = rr.coins >= r.cost;
-				const isFull    = rr.relics.length >= 6;
+				const isFree    = hermitActive && i === 0;
+				const effCost   = isFree ? 0 : r.cost;
+				const canAfford = rr.coins >= effCost;
+				const isFull    = rr.relics.length >= 7;
 				const disabled  = (!canAfford || isFull) ? 'disabled' : '';
-				const reason    = isFull ? 'スロット満杯' : `🪙 ${r.cost}`;
+				const reason    = isFull ? 'スロット満杯' : isFree ? '🎁 無料' : `🪙 ${r.cost}`;
 				return `<div class="joker-card rarity-${r.rarity}">
 					<div class="joker-card-emoji">${r.emoji}</div>
 					<div class="joker-card-info">
@@ -983,7 +1090,45 @@ const Game = {
 				</div>`;
 			}).join('');
 
-		// Attach buy listeners each render
+		// Purge Token (Hardroguerun only)
+		const purgeSection = document.getElementById('shop-purge-section');
+		if (purgeSection) {
+			if (rr.persistent) {
+				const purgeDisabled = (rr.purgeUsed || rr.coins < 90) ? 'disabled' : '';
+				const purgeLabel    = rr.purgeUsed ? '✅ 使用済み' : '💣 爆破ボム（上から9個削除）🪙 90';
+				purgeSection.innerHTML = `<button id="shop-purge-btn" ${purgeDisabled}>${purgeLabel}</button>`;
+				const purgeBtn = document.getElementById('shop-purge-btn');
+				if (purgeBtn) purgeBtn.addEventListener('click', () => Game.usePurgeToken());
+			} else {
+				purgeSection.innerHTML = '';
+			}
+		}
+
+		// Owned relics (for sell in Hardroguerun)
+		const sellSlots = document.getElementById('shop-sell-slots');
+		if (sellSlots) {
+			if (rr.persistent && rr.relics.length > 0) {
+				sellSlots.style.display = 'block';
+				const rarLabel = { common: 'コモン', uncommon: 'アンコモン', rare: 'レア', epic: 'エピック', legendary: 'レジェンダリー' };
+				sellSlots.innerHTML = `<div class="shop-sell-title">💸 売却（2回タップで確定・35%還元）</div>` +
+					rr.relics.map((r, idx) => {
+						const refund     = Math.ceil(r.cost * 0.35);
+						const isPending  = rr.sellPending === idx;
+						return `<div class="shop-sell-item rarity-${r.rarity} ${isPending ? 'sell-pending' : ''}" data-sell-idx="${idx}">
+							<span>${r.emoji}</span>
+							<span class="shop-sell-name">${r.name}</span>
+							<span class="shop-sell-refund">${isPending ? '✅ もう一度タップで確定' : `売却: 🪙${refund}`}</span>
+						</div>`;
+					}).join('');
+				sellSlots.querySelectorAll('.shop-sell-item').forEach(el => {
+					el.addEventListener('click', () => Game.tapSellRelic(parseInt(el.dataset.sellIdx)));
+				});
+			} else {
+				sellSlots.style.display = 'none';
+			}
+		}
+
+		// Attach buy listeners
 		document.querySelectorAll('.joker-buy-btn').forEach(btn => {
 			btn.addEventListener('click', () => Game.buyRelic(parseInt(btn.dataset.shopIdx)));
 		});
@@ -992,15 +1137,54 @@ const Game = {
 	buyRelic: function (idx) {
 		const rr = Game.rogueRun;
 		const relic = rr.shopOffers[idx];
-		if (!relic || rr.coins < relic.cost || rr.relics.length >= 6) return;
+		if (!relic) return;
 
-		rr.coins -= relic.cost;
+		const hermitFree = rr.arcana && rr.arcana.id === 'hermit' && !rr.arcanaState.hermitUsed && idx === 0;
+		const cost = hermitFree ? 0 : relic.cost;
+
+		if (rr.coins < cost || rr.relics.length >= 7) return;
+
+		rr.coins -= cost;
+		if (hermitFree) rr.arcanaState.hermitUsed = true;
+
 		rr.relics.push(relic);
 
 		// Immediate activation effects
 		if (relic.id === 'shield')   rr.shieldCharges += 1;
 		if (relic.id === 'talisman') rr.shieldCharges += 3;
 
+		Game.renderShop();
+		Game.updateRogueHud();
+	},
+
+	rerollShop: function () {
+		const rr = Game.rogueRun;
+		const cost = rr.rerollCount === 0 ? 0 : (rr.zone === 1 ? 20 : rr.zone === 2 ? 25 : 30);
+		if (rr.coins < cost) return;
+		rr.coins -= cost;
+		rr.rerollCount++;
+		// Regenerate offers (same logic as showShop)
+		const ownedIds = rr.relics.map(r => r.id);
+		const shopOfferIds = new Set(rr.shopOffers.map(r => r.id));
+		const available = RELIC_DEFS.filter(r =>
+			!ownedIds.includes(r.id) &&
+			!shopOfferIds.has(r.id) &&
+			rr.zone >= (MIN_ZONE_FOR_RARITY[r.rarity] || 1)
+		);
+		const rarityWeight = { common: 5, uncommon: 4, rare: 3, epic: 2, legendary: 1 };
+		const pool = [];
+		available.forEach(r => {
+			const w = rarityWeight[r.rarity] || 1;
+			for (let i = 0; i < w; i++) pool.push(r);
+		});
+		rr.shopOffers = [];
+		const tempPool = [...pool];
+		const seen = new Set();
+		while (rr.shopOffers.length < Math.min(3, available.length) && tempPool.length > 0) {
+			const idx = Math.floor(rand() * tempPool.length);
+			const relic = tempPool.splice(idx, 1)[0];
+			if (!seen.has(relic.id)) { seen.add(relic.id); rr.shopOffers.push(relic); }
+		}
 		Game.renderShop();
 		Game.updateRogueHud();
 	},
@@ -1132,6 +1316,232 @@ const Game = {
 
 		rr.coins += bonusCoins;
 		return bonusScore;
+	},
+
+	// ── Arcana: draw one card per Ante ───────────────────────
+	drawArcana: function () {
+		const rr = Game.rogueRun;
+		// Roll rarity
+		const roll = Math.random();
+		let rarity;
+		if (roll < 0.60)      rarity = 'common';
+		else if (roll < 0.90) rarity = 'uncommon';
+		else                  rarity = 'rare';
+
+		const pool = ARCANA_DEFS.filter(a => a.rarity === rarity);
+		if (!pool.length) return;
+		rr.arcana      = pool[Math.floor(rand() * pool.length)];
+		rr.arcanaState = {};
+
+		// Apply immediate effects
+		const a = rr.arcana;
+		if (a.id === 'fool') {
+			rr.scoreTarget = Math.round(rr.scoreTarget * 0.8);
+		}
+		if (a.id === 'moon_arcana') {
+			rr.arcanaState.moonReady = true; // next drop will be size 7
+		}
+		if (a.id === 'magician') {
+			rr.arcanaState.magicianCount = 3; // 3 same-size drops remaining
+			rr.arcanaState.magicianSize  = Game.currentFruitSize;
+		}
+
+		// Boss Ryuga (boss antes)
+		const isBossAnte = (rr.anteInZone === 5);
+		if (isBossAnte) {
+			Game.startBossRyuga();
+		}
+
+		Game.showArcanaReveal(rr.arcana);
+	},
+
+	showArcanaReveal: function (arcana) {
+		const el = document.getElementById('arcana-reveal');
+		if (!el) return;
+		document.getElementById('arcana-reveal-emoji').innerText = arcana.emoji;
+		document.getElementById('arcana-reveal-name').innerText  = arcana.name;
+		document.getElementById('arcana-reveal-desc').innerText  = arcana.desc;
+		el.style.display = 'flex';
+		clearTimeout(Game._arcanaTimer);
+		Game._arcanaTimer = setTimeout(() => { el.style.display = 'none'; }, 3200);
+	},
+
+	_arcanaTimer: null,
+
+	// Arcana per-merge hook (called inside applyRelicMergeEffect flow)
+	applyArcanaEffect: function (sizeIndex, midX, midY, isMaxMerge) {
+		const rr = Game.rogueRun;
+		if (!rr.arcana) return { score: 0, coins: 0 };
+		const a   = rr.arcana;
+		const st  = rr.arcanaState;
+		const baseScore = Game.fruitSizes[sizeIndex].scoreValue;
+		let bonus = { score: 0, coins: 0 };
+
+		switch (a.id) {
+			case 'high_priestess':
+				if (Math.random() < 0.15) bonus.coins += 3;
+				break;
+			case 'emperor':
+				bonus.score += Math.round(baseScore * 0.5); // +0.5x = total 1.5x
+				break;
+			case 'tower':
+				if (isMaxMerge) bonus.score += baseScore * 2; // total ×3
+				break;
+			case 'star':
+				if (rr.mergeCount % 5 === 0) {
+					const sx = midX;
+					setTimeout(() => {
+						if (Game.stateIndex !== GameStates.LOSE && Game.stateIndex !== GameStates.SHOP) {
+							for (let i = 0; i < 3; i++) {
+								const x = Math.max(80, Math.min(Game.width - 80, sx + (i - 1) * 100));
+								Composite.add(engine.world, Game.generateFruitBody(x, 60, 1));
+							}
+						}
+					}, 300);
+				}
+				break;
+		}
+		return bonus;
+	},
+
+	// Call when Ante clears — handle world arcana coin bonus
+	applyArcanaOnClear: function () {
+		const rr = Game.rogueRun;
+		if (!rr.arcana) return;
+		if (rr.arcana.id === 'world') {
+			rr.coins += 100;
+			Game.showCelebration('🌍 The World 発動！ コイン+100！');
+		}
+	},
+
+	// ── Boss Ryuga ────────────────────────────────────────────
+	bossRyuga: {
+		active:       false,
+		timeTimer:    null,
+		enemyTexture: null, // 丸くクリップした画像のdataURL（キャッシュ）
+	},
+
+	startBossRyuga: function () {
+		const rr = Game.rogueRun;
+		const br = Game.bossRyuga;
+		br.active = true;
+
+		// ゾーンごとの敵サイズ: Zone1=size0, Zone2=size1, Zone3=size2
+		const enemySize = rr.zone - 1;
+
+		// 背景オーバーレイ表示
+		const overlay = document.getElementById('boss-ryuga-overlay');
+		if (overlay) overlay.style.display = 'block';
+		const indicator = document.getElementById('boss-ryuga-indicator');
+		if (indicator) indicator.style.display = 'flex';
+
+		// 投下通知を出してからスポーン
+		const doSpawn = () => {
+			if (!br.active) return;
+			if (Game.stateIndex === GameStates.LOSE || Game.stateIndex === GameStates.SHOP) return;
+
+			// 「小デスリュウガ 投下！」通知
+			Game.showBossSpawnAlert();
+
+			const count = (rr.arcana && rr.arcana.id === 'devil') ? 4 : 2;
+			setTimeout(() => {
+				if (!br.active) return;
+				for (let i = 0; i < count; i++) {
+					const x = Math.max(80, Math.min(Game.width - 80, 100 + rand() * (Game.width - 200)));
+					Composite.add(engine.world, Game.generateBossEnemyBody(x, 60, enemySize));
+				}
+			}, 800); // 通知表示後にスポーン
+		};
+
+		// 画像を丸くクリップしてからスポーン開始
+		Game.prepareBossEnemyTexture(() => {
+			// 最初の投下 (2秒後)
+			setTimeout(doSpawn, 2000);
+			// 以降30秒ごと
+			br.timeTimer = setInterval(doSpawn, 30000);
+		});
+	},
+
+	showBossSpawnAlert: function () {
+		const el = document.getElementById('boss-spawn-alert');
+		if (!el) return;
+		el.style.animation = 'none';
+		el.offsetHeight; // reflow でアニメーションリセット
+		el.style.display = 'block';
+		el.style.animation = 'bossSpawnFade 1.8s ease forwards';
+		clearTimeout(Game._bossAlertTimer);
+		Game._bossAlertTimer = setTimeout(() => { el.style.display = 'none'; }, 1900);
+	},
+	_bossAlertTimer: null,
+
+	checkBossRyugaMerge: function () {
+		// 合体フックは維持（将来の拡張用）
+	},
+
+	stopBossRyuga: function () {
+		const br = Game.bossRyuga;
+		br.active = false;
+		clearInterval(br.timeTimer);
+		br.timeTimer = null;
+
+		// 背景・インジケーター非表示
+		const overlay = document.getElementById('boss-ryuga-overlay');
+		if (overlay) overlay.style.display = 'none';
+		const indicator = document.getElementById('boss-ryuga-indicator');
+		if (indicator) indicator.style.display = 'none';
+
+		// bossEnemy ラベルの全フルーツ消滅
+		const enemies = Composite.allBodies(engine.world).filter(b => b.label === 'bossEnemy');
+		if (enemies.length) Composite.remove(engine.world, enemies);
+
+		// ボーナス
+		Game.extraPoints += 150;
+		Game.calculateScore();
+		Game.showCelebration('✨ デスリュウガ撃破！ +150pts ✨');
+	},
+
+	// ── 爆破ボム ──────────────────────────────────────────────
+	usePurgeToken: function () {
+		const rr = Game.rogueRun;
+		if (rr.purgeUsed) { Game.showCelebration('⚠️ このAnteはすでに使用済み'); return; }
+		if (rr.coins < 90) { Game.showCelebration('⚠️ コインが足りない'); return; }
+		rr.coins -= 90;
+		rr.purgeUsed = true;
+
+		// 危険ライン優先（y座標小さい＝上にある＝危険）でフルーツを9個削除
+		const bodies = Composite.allBodies(engine.world)
+			.filter(b => !b.isStatic)
+			.sort((a, b) => a.position.y - b.position.y);
+
+		const toRemove = bodies.slice(0, 9);
+		if (toRemove.length) Composite.remove(engine.world, toRemove);
+		Game.showCelebration(`💣 爆破ボム発動！ ${toRemove.length}個削除！`);
+		Game.renderShop();
+		Game.updateRogueHud();
+	},
+
+	// ── Relic Sell (Hardroguerun only) ────────────────────────
+	tapSellRelic: function (relicIdx) {
+		const rr = Game.rogueRun;
+		if (!rr.persistent) return; // Hardroguerun only
+		const relic = rr.relics[relicIdx];
+		if (!relic) return;
+
+		if (rr.sellPending === relicIdx) {
+			// Second tap: confirm sell
+			const refund = Math.ceil(relic.cost * 0.35);
+			rr.relics.splice(relicIdx, 1);
+			rr.coins += refund;
+			rr.sellPending = null;
+			Game.showCelebration(`💸 ${relic.emoji} 売却！ コイン+${refund}`);
+			Game.renderShop();
+			Game.updateRogueHud();
+		} else {
+			// First tap: show confirmation
+			rr.sellPending = relicIdx;
+			const refund = Math.ceil(relic.cost * 0.35);
+			Game.renderShop(); // re-render to show confirm state
+		}
 	},
 
 	endRogueRun: function (won) {
@@ -1331,6 +1741,7 @@ const Game = {
 		document.getElementById('shop-skip-btn').addEventListener('click', () => {
 			Game.startNextAnte();
 		});
+		document.getElementById('shop-reroll-btn').addEventListener('click', () => Game.rerollShop());
 
 		// ── Game-end events ──
 		document.getElementById('game-end-restart').addEventListener('click', async function () {
@@ -1465,6 +1876,9 @@ const Game = {
 					return;
 				}
 
+				// お邪魔フルーツは合体不可
+				if (bodyA.isBossEnemy || bodyB.isBossEnemy) continue;
+
 				if (bodyA.sizeIndex !== bodyB.sizeIndex) continue;
 				if (bodyA.popped || bodyB.popped) continue;
 
@@ -1493,7 +1907,10 @@ const Game = {
 					if (Game.rogueRun.active) {
 						const relicBonus = Game.applyRelicMergeEffect(sizeIndex, midX, midY);
 						if (relicBonus > 0) Game.extraPoints += relicBonus;
-						Game.rogueRun.coins += 1;
+						const arcanaBonus = Game.applyArcanaEffect(sizeIndex, midX, midY, true);
+						Game.extraPoints += arcanaBonus.score;
+						Game.rogueRun.coins += 2 + arcanaBonus.coins;
+						Game.checkBossRyugaMerge();
 						Game.updateRogueHud();
 					}
 
@@ -1514,7 +1931,10 @@ const Game = {
 					if (Game.rogueRun.active) {
 						const relicBonus = Game.applyRelicMergeEffect(sizeIndex, midX, midY);
 						if (relicBonus > 0) Game.extraPoints += relicBonus;
-						Game.rogueRun.coins += 1;
+						const arcanaBonus = Game.applyArcanaEffect(sizeIndex, midX, midY, false);
+						Game.extraPoints += arcanaBonus.score;
+						Game.rogueRun.coins += 2 + arcanaBonus.coins;
+						Game.checkBossRyugaMerge();
 						Game.updateRogueHud();
 					}
 
@@ -1647,6 +2067,69 @@ const Game = {
 		circle.sizeIndex = sizeIndex;
 		circle.popped = false;
 		return circle;
+	},
+
+	// ── ボス敵フルーツ生成（合体不可・専用画像・丸くクリップ済み） ──
+	generateBossEnemyBody: function (x, y, sizeIndex) {
+		const size = Game.fruitSizes[sizeIndex];
+		const texture = Game.bossRyuga.enemyTexture || './assets/img/boss-enemy.png';
+		const circle = Bodies.circle(x, y, size.radius, {
+			...fruitPhysics,
+			label: 'bossEnemy',
+			render: {
+				sprite: {
+					texture: texture,
+					xScale: (size.radius * 2) / 1024,
+					yScale: (size.radius * 2) / 1024,
+				}
+			},
+		});
+		circle.isBossEnemy = true; // 合体ロジックから除外するフラグ
+		circle.sizeIndex   = null; // sizeIndex を null にして通常フルーツと一致しない
+		circle.popped      = false;
+		return circle;
+	},
+
+	// ── 画像を円形にクリップしてキャッシュ ──
+	prepareBossEnemyTexture: function (callback) {
+		const img = new Image();
+		img.crossOrigin = 'anonymous';
+		img.onload = function () {
+			const D = 1024;
+			const canvas = document.createElement('canvas');
+			canvas.width = D; canvas.height = D;
+			const ctx = canvas.getContext('2d');
+			ctx.beginPath();
+			ctx.arc(D / 2, D / 2, D / 2, 0, Math.PI * 2);
+			ctx.closePath();
+			ctx.clip();
+			ctx.drawImage(img, 0, 0, D, D);
+			Game.bossRyuga.enemyTexture = canvas.toDataURL('image/png');
+			if (callback) callback();
+		};
+		img.onerror = function () {
+			// フォールバック: 暗い赤色の💀マーク
+			const D = 1024;
+			const canvas = document.createElement('canvas');
+			canvas.width = D; canvas.height = D;
+			const ctx = canvas.getContext('2d');
+			ctx.beginPath();
+			ctx.arc(D / 2, D / 2, D / 2, 0, Math.PI * 2);
+			ctx.clip();
+			const grad = ctx.createRadialGradient(D/2, D/2, 0, D/2, D/2, D/2);
+			grad.addColorStop(0, '#5a0000');
+			grad.addColorStop(1, '#1a0000');
+			ctx.fillStyle = grad;
+			ctx.fillRect(0, 0, D, D);
+			ctx.font = '900 480px serif';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			ctx.fillStyle = '#ff2222';
+			ctx.fillText('💀', D / 2, D / 2 + 30);
+			Game.bossRyuga.enemyTexture = canvas.toDataURL('image/png');
+			if (callback) callback();
+		};
+		img.src = './assets/img/boss-enemy.png';
 	},
 
 	addFruit: function (x) {
