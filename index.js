@@ -392,9 +392,14 @@ const Game = {
 
 		// Roguerun: check if ante target reached
 		if (Game.rogueRun.active && !Game.rogueRun.anteCleared &&
-		    Game.stateIndex !== GameStates.LOSE && Game.stateIndex !== GameStates.SHOP &&
-		    Game.score >= Game.rogueRun.scoreTarget) {
-			Game.onAnteClear();
+		    Game.stateIndex !== GameStates.LOSE && Game.stateIndex !== GameStates.SHOP) {
+			// keepScore モード: このAnteで稼いだ分（差分）と目標を比較
+			const anteScore = Game.rogueRun.keepScore
+				? Game.score - Game.rogueRun.anteScoreBase
+				: Game.score;
+			if (anteScore >= Game.rogueRun.scoreTarget) {
+				Game.onAnteClear();
+			}
 		}
 		// Update rogue HUD progress bar
 		if (Game.rogueRun.active) Game.updateRogueHud();
@@ -831,8 +836,10 @@ const Game = {
 		shieldCharges: 0,      // shield charges remaining (shield +1, talisman +3)
 		mergeCount:   0,       // total merges this ante (for meteor relic)
 		cycleSize:    0,       // current butterfly cycle size
-		persistent:    false,   // if true: board is NOT cleared between antes (hardcore mode)
-		anteStartTime: 0,       // timestamp of last ante start (for grace period in hardcore)
+		persistent:     false,  // if true: board is NOT cleared between antes
+		keepScore:      false,  // if true: score is NOT reset between antes (ハードモード)
+		anteScoreBase:  0,      // score at start of current ante (keepScore用ベースライン)
+		anteStartTime:  0,      // timestamp of last ante start (for grace period in hardcore)
 		// ── v14 additions ──
 		arcana:        null,    // current ante's arcana card (one of ARCANA_DEFS)
 		arcanaState:   {},      // per-arcana ephemeral state
@@ -856,7 +863,12 @@ const Game = {
 		rr.shieldCharges = 0;
 		rr.mergeCount    = 0;
 		rr.cycleSize     = 0;
-		rr.persistent    = Game.settings.gameMode === 'hardroguerun';
+		// hardroguerun: 盤面＆スコア両方持続 (ハード)
+		// hardcoreroguerun: 盤面持続・スコアリセット (ハードコア)
+		const m = Game.settings.gameMode;
+		rr.persistent   = (m === 'hardroguerun' || m === 'hardcoreroguerun');
+		rr.keepScore    = (m === 'hardroguerun');
+		rr.anteScoreBase = 0;
 		rr.arcana        = null;
 		rr.arcanaState   = {};
 		rr.rerollCount   = 0;
@@ -926,9 +938,12 @@ const Game = {
 			`${cfg.label}  (${rr.anteIndex + 1}/15)`;
 		document.getElementById('rogue-coins-display').innerText = `🪙 ${rr.coins}`;
 
-		const pct = Math.min(100, Math.round((Game.score / rr.scoreTarget) * 100));
+		const anteScore = rr.keepScore ? Game.score - rr.anteScoreBase : Game.score;
+		const pct = Math.min(100, Math.round((anteScore / rr.scoreTarget) * 100));
 		document.getElementById('rogue-progress-fill').style.width = `${pct}%`;
-		document.getElementById('rogue-progress-text').innerText = `${Game.score} / ${rr.scoreTarget}`;
+		document.getElementById('rogue-progress-text').innerText = rr.keepScore
+			? `+${anteScore} / ${rr.scoreTarget}  (計${Game.score})`
+			: `${Game.score} / ${rr.scoreTarget}`;
 
 		// Relic slots (max 6) — clickable for tooltip
 		const slots = document.getElementById('rogue-joker-slots');
@@ -1200,11 +1215,19 @@ const Game = {
 
 		// Reset per-ante state
 		Game.rogueRun.anteIndex++;
-		Game.score       = 0;
-		Game.extraPoints = 0;
-		Game.combo       = 0;
+		Game.combo           = 0;
 		Game.maxComboReached = 0;
-		Game.fruitsMerged = new Array(Game.fruitSizes.length).fill(0);
+
+		if (Game.rogueRun.keepScore) {
+			// ハードモード: スコア・フルーツカウントを引き継ぐ
+			// anteScoreBase を今のスコアに更新（次Anteの差分計算用）
+			Game.rogueRun.anteScoreBase = Game.score;
+		} else {
+			// 通常・ハードコア: スコアリセット
+			Game.score        = 0;
+			Game.extraPoints  = 0;
+			Game.fruitsMerged = new Array(Game.fruitSizes.length).fill(0);
+		}
 		Game.calculateScore();
 
 		// Apply new zone/ante config
@@ -1591,15 +1614,48 @@ const Game = {
 		Game.fruitsMerged = new Array(Game.fruitSizes.length).fill(0);
 
 		// ── Menu mode selector ──
+		const ROGUE_MODES = ['roguerun', 'hardroguerun', 'hardcoreroguerun'];
+
 		const syncModeBtns = (mode) => {
-			document.querySelectorAll('.mode-btn').forEach(btn => {
+			// 通常ボタン（data-mode持ち）
+			document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
 				btn.classList.toggle('active', btn.dataset.mode === mode);
 			});
+			// ローグランカテゴリーボタン: ローグ系モードが選ばれていれば強調
+			const catBtn   = document.getElementById('btn-category-roguerun');
+			const submenu  = document.getElementById('roguerun-submenu');
+			const isRogue  = ROGUE_MODES.includes(mode);
+			if (catBtn)  catBtn.classList.toggle('category-open', isRogue);
+			if (submenu) submenu.style.display = isRogue ? 'flex' : 'none';
 		};
 
 		syncModeBtns(Game.settings.gameMode);
 
-		document.querySelectorAll('.mode-btn').forEach(btn => {
+		// カテゴリーボタン: トグルでサブメニュー表示
+		const catBtn  = document.getElementById('btn-category-roguerun');
+		const submenu = document.getElementById('roguerun-submenu');
+		if (catBtn) {
+			catBtn.addEventListener('click', () => {
+				const isOpen = submenu.style.display !== 'none';
+				if (isOpen) {
+					// サブメニューを閉じる（モードはそのまま）
+					submenu.style.display = 'none';
+					catBtn.classList.remove('category-open');
+				} else {
+					// サブメニューを開き、デフォルトで roguerun を選択
+					submenu.style.display = 'flex';
+					catBtn.classList.add('category-open');
+					if (!ROGUE_MODES.includes(Game.settings.gameMode)) {
+						Game.settings.gameMode = 'roguerun';
+						syncModeBtns('roguerun');
+						Game.saveSettings();
+					}
+				}
+			});
+		}
+
+		// サブモードボタン（mode-btn-sub）
+		document.querySelectorAll('.mode-btn-sub').forEach(btn => {
 			btn.addEventListener('click', () => {
 				Game.settings.gameMode = btn.dataset.mode;
 				syncModeBtns(btn.dataset.mode);
@@ -1607,10 +1663,20 @@ const Game = {
 			});
 		});
 
+		// 通常モードボタン（ローグ系以外）
+		document.querySelectorAll('.mode-btn[data-mode]:not(.mode-btn-sub)').forEach(btn => {
+			if (btn.id === 'btn-category-roguerun') return; // カテゴリーは上で処理済み
+			btn.addEventListener('click', () => {
+				if (!btn.dataset.mode) return;
+				Game.settings.gameMode = btn.dataset.mode;
+				syncModeBtns(btn.dataset.mode);
+				Game.saveSettings();
+			});
+		});
+
 		// ── Helper: get final score to save (roguerun uses totalScore) ──
-		const getFinalSaveScore = () =>
-			(Game.settings.gameMode === 'roguerun' || Game.settings.gameMode === 'hardroguerun')
-				? Game.rogueRun.totalScore : Game.score;
+		const isRogueMode = ['roguerun', 'hardroguerun', 'hardcoreroguerun'].includes(Game.settings.gameMode);
+		const getFinalSaveScore = () => isRogueMode ? Game.rogueRun.totalScore : Game.score;
 
 		// ── Helper: save to both local and online leaderboard ──
 		const saveScores = async (name) => {
@@ -1823,7 +1889,7 @@ const Game = {
 			Game.startTimer();
 		} else if (Game.settings.gameMode === 'challenge') {
 			Game.pickChallenge();
-		} else if (Game.settings.gameMode === 'roguerun' || Game.settings.gameMode === 'hardroguerun') {
+		} else if (['roguerun', 'hardroguerun', 'hardcoreroguerun'].includes(Game.settings.gameMode)) {
 			Game.startRogueRun();
 		}
 
