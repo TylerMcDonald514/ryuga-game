@@ -109,23 +109,23 @@ const MIN_ZONE_FOR_RARITY = { common: 1, uncommon: 1, rare: 1, epic: 2, legendar
 // ── ZONE CONFIG: 3 zones × 5 antes ──────────────────────────
 const ZONE_CONFIG = [
 	// Zone 1: 入門地帯
-	{ zone: 1, ante: 1, target: 120,  gravity: 1.0,  label: '🌱 Zone 1-1' },
-	{ zone: 1, ante: 2, target: 200,  gravity: 1.05, label: '🌱 Zone 1-2' },
-	{ zone: 1, ante: 3, target: 310,  gravity: 1.10, label: '🌱 Zone 1-3' },
-	{ zone: 1, ante: 4, target: 440,  gravity: 1.17, label: '🌱 Zone 1-4' },
-	{ zone: 1, ante: 5, target: 600,  gravity: 1.28, label: '🐉 Zone 1 BOSS' },
+	{ zone: 1, ante: 1, target: 320,  gravity: 1.0,  label: '🌱 Zone 1-1' },
+	{ zone: 1, ante: 2, target: 500,  gravity: 1.05, label: '🌱 Zone 1-2' },
+	{ zone: 1, ante: 3, target: 810,  gravity: 1.10, label: '🌱 Zone 1-3' },
+	{ zone: 1, ante: 4, target: 1200,  gravity: 1.17, label: '🌱 Zone 1-4' },
+	{ zone: 1, ante: 5, target: 1500,  gravity: 1.28, label: '🐉 Zone 1 BOSS' },
 	// Zone 2: 修練の地
-	{ zone: 2, ante: 1, target: 300,  gravity: 1.15, label: '🔥 Zone 2-1' },
-	{ zone: 2, ante: 2, target: 480,  gravity: 1.22, label: '🔥 Zone 2-2' },
-	{ zone: 2, ante: 3, target: 680,  gravity: 1.30, label: '🔥 Zone 2-3' },
-	{ zone: 2, ante: 4, target: 920,  gravity: 1.40, label: '🔥 Zone 2-4' },
-	{ zone: 2, ante: 5, target: 1200, gravity: 1.55, label: '🐉 Zone 2 BOSS' },
+	{ zone: 2, ante: 1, target: 900,  gravity: 1.15, label: '🔥 Zone 2-1' },
+	{ zone: 2, ante: 2, target: 1280,  gravity: 1.22, label: '🔥 Zone 2-2' },
+	{ zone: 2, ante: 3, target: 1680,  gravity: 1.30, label: '🔥 Zone 2-3' },
+	{ zone: 2, ante: 4, target: 1920,  gravity: 1.40, label: '🔥 Zone 2-4' },
+	{ zone: 2, ante: 5, target: 2400, gravity: 1.55, label: '🐉 Zone 2 BOSS' },
 	// Zone 3: 伝説の頂
-	{ zone: 3, ante: 1, target: 600,  gravity: 1.35, label: '⚡ Zone 3-1' },
-	{ zone: 3, ante: 2, target: 900,  gravity: 1.45, label: '⚡ Zone 3-2' },
-	{ zone: 3, ante: 3, target: 1250, gravity: 1.58, label: '⚡ Zone 3-3' },
-	{ zone: 3, ante: 4, target: 1650, gravity: 1.74, label: '⚡ Zone 3-4' },
-	{ zone: 3, ante: 5, target: 2200, gravity: 1.95, label: '👑 FINAL BOSS' },
+	{ zone: 3, ante: 1, target: 2100,  gravity: 1.35, label: '⚡ Zone 3-1' },
+	{ zone: 3, ante: 2, target: 3090,  gravity: 1.45, label: '⚡ Zone 3-2' },
+	{ zone: 3, ante: 3, target: 4250, gravity: 1.58, label: '⚡ Zone 3-3' },
+	{ zone: 3, ante: 4, target: 5650, gravity: 1.74, label: '⚡ Zone 3-4' },
+	{ zone: 3, ante: 5, target: 9200, gravity: 1.95, label: '👑 FINAL BOSS' },
 ];
 
 function escapeHtml(str) {
