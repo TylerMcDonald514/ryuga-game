@@ -800,6 +800,31 @@
       color: white;
     }
 
+    /* ローグランサブメニュー */
+    .mode-btn-category.category-open {
+      background: var(--col-primary-light);
+      color: white;
+    }
+    .mode-submenu {
+      width: 100%;
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 4px 0 0;
+    }
+    .mode-btn-sub {
+      font-size: 13px;
+      padding: 7px 14px;
+      border-radius: 14px;
+      opacity: 0.9;
+    }
+    .mode-btn-sub.active {
+      background: var(--col-primary);
+      color: white;
+      border-color: var(--col-primary-dark);
+    }
+
     .status-icon-btn {
       pointer-events: initial;
       background: none;
@@ -1304,7 +1329,8 @@
               <button class="lb-mode-btn" data-lbmode="timeattack">⏱ TA</button>
               <button class="lb-mode-btn" data-lbmode="challenge">🎯 チャレンジ</button>
               <button class="lb-mode-btn" data-lbmode="roguerun">🏃 ローグラン</button>
-              <button class="lb-mode-btn" data-lbmode="hardroguerun">💀 ハードコア</button>
+              <button class="lb-mode-btn" data-lbmode="hardroguerun">💀 ハード</button>
+              <button class="lb-mode-btn" data-lbmode="hardcoreroguerun">☠️ HC</button>
             </div>
             <!-- Source tabs -->
             <div class="lb-tabs">
@@ -1395,8 +1421,13 @@
           <button class="mode-btn active" data-mode="normal">ノーマル</button>
           <button class="mode-btn" data-mode="timeattack">⏱ タイムアタック</button>
           <button class="mode-btn" data-mode="challenge">🎯 チャレンジ</button>
-          <button class="mode-btn" data-mode="roguerun">🏃 ローグラン</button>
-          <button class="mode-btn" data-mode="hardroguerun">💀 ハードコア</button>
+          <!-- ローグランカテゴリー: クリックでサブメニュー表示 -->
+          <button class="mode-btn mode-btn-category" id="btn-category-roguerun">🏃 ローグラン ▾</button>
+          <div id="roguerun-submenu" class="mode-submenu" style="display:none">
+            <button class="mode-btn mode-btn-sub" data-mode="roguerun">📋 ノーマル</button>
+            <button class="mode-btn mode-btn-sub" data-mode="hardroguerun">💀 ハード</button>
+            <button class="mode-btn mode-btn-sub" data-mode="hardcoreroguerun">☠️ ハードコア</button>
+          </div>
         </div>
         <button id="menu-lb-btn">🏆 ランキング</button>
       </div>
