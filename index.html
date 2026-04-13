@@ -1059,6 +1059,143 @@
       font-weight: 900;
       margin-bottom: 4px;
     }
+
+    /* ===== ARCANA REVEAL ===== */
+    #arcana-reveal {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 200;
+      background: linear-gradient(135deg, #1a0a2e, #2d1250);
+      border: 2px solid #a855f7;
+      border-radius: 18px;
+      padding: 24px 32px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(168,85,247,0.6);
+      pointer-events: none;
+      animation: arcanaFadeIn 0.4s ease;
+    }
+    @keyframes arcanaFadeIn {
+      from { opacity: 0; transform: translate(-50%, -55%) scale(0.85); }
+      to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    #arcana-reveal-emoji { font-size: 48px; line-height: 1; margin-bottom: 8px; }
+    #arcana-reveal-name  { font-size: 20px; font-weight: 900; color: #d8b4fe; margin-bottom: 6px; }
+    #arcana-reveal-desc  { font-size: 14px; color: #e9d5ff; }
+
+    /* ===== BOSS RYUGA ===== */
+    #boss-ryuga-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      background: url('./assets/img/boss-ryuga-bg.jpg') center center / cover no-repeat;
+      opacity: 0.22;
+      pointer-events: none;
+      animation: bossOscillate 4s ease-in-out infinite;
+    }
+    @keyframes bossOscillate {
+      0%, 100% { opacity: 0.18; }
+      50%       { opacity: 0.30; }
+    }
+    #boss-ryuga-indicator {
+      display: none;
+      position: absolute;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: rgba(140,0,0,0.90);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 5px 16px;
+      border-radius: 20px;
+      border: 1.5px solid #ff2222;
+      pointer-events: none;
+      animation: bossPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes bossPulse {
+      0%, 100% { box-shadow: 0 0 8px rgba(255,0,0,0.5); }
+      50%       { box-shadow: 0 0 20px rgba(255,0,0,0.9); }
+    }
+
+    /* ===== BOSS SPAWN ALERT ===== */
+    #boss-spawn-alert {
+      display: none;
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 150;
+      background: rgba(100,0,0,0.92);
+      color: #ff4444;
+      font-size: 22px;
+      font-weight: 900;
+      padding: 10px 28px;
+      border-radius: 14px;
+      border: 2px solid #ff2222;
+      white-space: nowrap;
+      pointer-events: none;
+      text-shadow: 0 0 12px rgba(255,0,0,0.8);
+    }
+    @keyframes bossSpawnFade {
+      0%   { opacity: 0; transform: translateX(-50%) scale(0.8); }
+      15%  { opacity: 1; transform: translateX(-50%) scale(1.05); }
+      70%  { opacity: 1; transform: translateX(-50%) scale(1); }
+      100% { opacity: 0; transform: translateX(-50%) scale(0.95); }
+    }
+
+    /* ===== SHOP REROLL ===== */
+    #shop-reroll-btn {
+      width: 100%;
+      padding: 9px 0;
+      margin: 8px 0 4px;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 900;
+      font-size: 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #shop-reroll-btn:disabled { background: #555; color: #999; cursor: default; }
+
+    /* ===== SHOP PURGE ===== */
+    #shop-purge-section { margin: 6px 0; }
+    #shop-purge-btn {
+      width: 100%;
+      padding: 9px 0;
+      background: #7c3aed;
+      color: #fff;
+      font-weight: 900;
+      font-size: 14px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #shop-purge-btn:disabled { background: #555; color: #999; cursor: default; }
+
+    /* ===== SHOP SELL SLOTS ===== */
+    #shop-sell-slots { display: none; margin-top: 12px; }
+    .shop-sell-title { font-size: 12px; color: var(--col-text-muted); margin-bottom: 6px; font-weight: 700; }
+    .shop-sell-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; margin-bottom: 5px;
+      border-radius: 10px; border: 1.5px solid;
+      cursor: pointer; font-size: 13px;
+      transition: background 0.15s;
+    }
+    .shop-sell-item.rarity-common    { border-color: #aaa; }
+    .shop-sell-item.rarity-uncommon  { border-color: #5B8AF5; }
+    .shop-sell-item.rarity-rare      { border-color: #ffd54f; }
+    .shop-sell-item.rarity-epic      { border-color: #a855f7; }
+    .shop-sell-item.rarity-legendary { border-color: #f59e0b; }
+    .shop-sell-item.sell-pending     { background: rgba(239,68,68,0.15); border-color: #ef4444; }
+    .shop-sell-name   { flex: 1; }
+    .shop-sell-refund { font-size: 11px; color: var(--col-text-muted); white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -1179,6 +1316,22 @@
           </div>
         </div>
 
+        <!-- Boss Ryuga 背景オーバーレイ（写真） -->
+        <div id="boss-ryuga-overlay"></div>
+
+        <!-- Boss 投下アラート -->
+        <div id="boss-spawn-alert">💀 小デスリュウガ 投下！</div>
+
+        <!-- Arcana Reveal Overlay -->
+        <div id="arcana-reveal">
+          <div id="arcana-reveal-emoji">🃏</div>
+          <div id="arcana-reveal-name">The Fool</div>
+          <div id="arcana-reveal-desc">このAnteの目標スコア -20%</div>
+        </div>
+
+        <!-- Boss Ryuga Indicator -->
+        <div id="boss-ryuga-indicator">💀 デスリュウガ 出現中！</div>
+
         <!-- Shop Overlay (Roguelike) -->
         <div id="shop-overlay" class="modal-overlay" style="display:none">
           <div class="modal-panel">
@@ -1186,7 +1339,10 @@
               <div id="shop-title">🛒 ショップ</div>
               <div id="shop-coins-display">🪙 0</div>
             </div>
+            <button id="shop-reroll-btn">🔄 Reroll (無料)</button>
             <div id="shop-offers"></div>
+            <div id="shop-purge-section"></div>
+            <div id="shop-sell-slots"></div>
             <button id="shop-skip-btn">次の Ante へ →</button>
           </div>
         </div>
@@ -1247,6 +1403,6 @@
     </div>
   </div>
   <script type="text/javascript" src="./matter.js"></script>
-  <script type="text/javascript" src="./index.js?v=12"></script>
+  <script type="text/javascript" src="./index.js?v=14"></script>
 </body>
 </html>
