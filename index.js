@@ -115,17 +115,17 @@ const ZONE_CONFIG = [
 	{ zone: 1, ante: 4, target: 1200,  gravity: 1.17, label: '🌱 Zone 1-4' },
 	{ zone: 1, ante: 5, target: 1500,  gravity: 1.28, label: '🐉 Zone 1 BOSS' },
 	// Zone 2: 修練の地
-	{ zone: 2, ante: 1, target: 900,  gravity: 1.15, label: '🔥 Zone 2-1' },
-	{ zone: 2, ante: 2, target: 1280,  gravity: 1.22, label: '🔥 Zone 2-2' },
-	{ zone: 2, ante: 3, target: 1680,  gravity: 1.30, label: '🔥 Zone 2-3' },
-	{ zone: 2, ante: 4, target: 1920,  gravity: 1.40, label: '🔥 Zone 2-4' },
-	{ zone: 2, ante: 5, target: 2400, gravity: 1.55, label: '🐉 Zone 2 BOSS' },
+	{ zone: 2, ante: 1, target: 1900,  gravity: 1.15, label: '🔥 Zone 2-1' },
+	{ zone: 2, ante: 2, target: 2280,  gravity: 1.22, label: '🔥 Zone 2-2' },
+	{ zone: 2, ante: 3, target: 2680,  gravity: 1.30, label: '🔥 Zone 2-3' },
+	{ zone: 2, ante: 4, target: 2920,  gravity: 1.40, label: '🔥 Zone 2-4' },
+	{ zone: 2, ante: 5, target: 3400, gravity: 1.55, label: '🐉 Zone 2 BOSS' },
 	// Zone 3: 伝説の頂
-	{ zone: 3, ante: 1, target: 2100,  gravity: 1.35, label: '⚡ Zone 3-1' },
-	{ zone: 3, ante: 2, target: 3090,  gravity: 1.45, label: '⚡ Zone 3-2' },
-	{ zone: 3, ante: 3, target: 4250, gravity: 1.58, label: '⚡ Zone 3-3' },
-	{ zone: 3, ante: 4, target: 5650, gravity: 1.74, label: '⚡ Zone 3-4' },
-	{ zone: 3, ante: 5, target: 9200, gravity: 1.95, label: '👑 FINAL BOSS' },
+	{ zone: 3, ante: 1, target: 4100,  gravity: 1.35, label: '⚡ Zone 3-1' },
+	{ zone: 3, ante: 2, target: 5090,  gravity: 1.45, label: '⚡ Zone 3-2' },
+	{ zone: 3, ante: 3, target: 6250, gravity: 1.58, label: '⚡ Zone 3-3' },
+	{ zone: 3, ante: 4, target: 7650, gravity: 1.74, label: '⚡ Zone 3-4' },
+	{ zone: 3, ante: 5, target: 9999, gravity: 1.95, label: '👑 FINAL BOSS' },
 ];
 
 function escapeHtml(str) {
