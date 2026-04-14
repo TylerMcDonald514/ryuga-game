@@ -1584,27 +1584,27 @@
           <div id="pause-idle-msg" style="display:none">⏸ 一時停止中</div>
         </div>
 
-        <!-- Roguerun Modal -->
-        <div id="roguerun-modal" style="display:none">
-          <div id="roguerun-modal-inner">
-            <div id="roguerun-modal-title">🏃 ローグランモード</div>
-            <div id="roguerun-modal-subtitle">フロアをクリアしてレリックを集め、強くなれ！</div>
-            <div id="roguerun-mode-grid">
-              <div class="rogue-mode-card" data-mode="roguerun">
-                <div class="rogue-mode-icon">📋</div>
-                <div class="rogue-mode-name">ノーマル</div>
-                <div class="rogue-mode-desc">フロアクリアで盤面リセット<br>スコアは累積</div>
-              </div>
-              <div class="rogue-mode-card" data-mode="hardroguerun">
-                <div class="rogue-mode-icon">💀</div>
-                <div class="rogue-mode-name">ハード</div>
-                <div class="rogue-mode-desc">盤面持続・ボス出現<br>高難易度モード</div>
-              </div>
-            </div>
-            <button id="roguerun-modal-close">✕ 閉じる</button>
-          </div>
-        </div>
+      </div>
 
+      <!-- Roguerun Modal (outside #game-ui so it shows on menu) -->
+      <div id="roguerun-modal" style="display:none">
+        <div id="roguerun-modal-inner">
+          <div id="roguerun-modal-title">🏃 ローグランモード</div>
+          <div id="roguerun-modal-subtitle">フロアをクリアしてレリックを集め、強くなれ！</div>
+          <div id="roguerun-mode-grid">
+            <div class="rogue-mode-card" data-mode="roguerun">
+              <div class="rogue-mode-icon">📋</div>
+              <div class="rogue-mode-name">ノーマル</div>
+              <div class="rogue-mode-desc">フロアクリアで盤面リセット<br>スコアは累積</div>
+            </div>
+            <div class="rogue-mode-card" data-mode="hardroguerun">
+              <div class="rogue-mode-icon">💀</div>
+              <div class="rogue-mode-name">ハード</div>
+              <div class="rogue-mode-desc">盤面持続・ボス出現<br>高難易度モード</div>
+            </div>
+          </div>
+          <button id="roguerun-modal-close">✕ 閉じる</button>
+        </div>
       </div>
 
       <!-- Menu UI (mode selector, shown before game starts) -->
