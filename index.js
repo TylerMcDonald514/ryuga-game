@@ -958,6 +958,7 @@ const Game = {
 		activeSynergies: [],    // active synergy keys
 		curseoffer:      null,  // current curse offer in shop
 		_overtimeUsed:   false, // boss_overtime already consumed
+		_overtimeActive: false, // overtime countdown currently running
 	},
 
 	startRogueRun: function () {
@@ -996,6 +997,7 @@ const Game = {
 		rr.activeSynergies = [];
 		rr.curseoffer      = null;
 		rr._overtimeUsed   = false;
+		rr._overtimeActive = false;
 
 		// Show rogue status bar, hide normal status
 		document.getElementById('game-status').style.display = 'none';
@@ -1522,11 +1524,16 @@ const Game = {
 				if (relic.id === 'boss_reroll')       rr.rerollCharges = -1;   // unlimited
 				if (relic.id === 'boss_reroll_stock') rr.rerollCharges = 3;    // 3 charges
 				if (relic.id === 'boss_shrink') {
-					// Immediately shrink all existing fruits
+					// 既存フルーツを物理・スプライト両方0.8倍に縮小
 					Composite.allBodies(engine.world).forEach(b => {
 						if (!b.isStatic && typeof b.sizeIndex === 'number') {
 							Matter.Body.scale(b, 0.8, 0.8);
 							b._radius = (b._radius || b.circleRadius || Game.fruitSizes[b.sizeIndex].radius) * 0.8;
+							// スプライトのスケールも合わせて更新
+							if (b.render && b.render.sprite) {
+								b.render.sprite.xScale *= 0.8;
+								b.render.sprite.yScale *= 0.8;
+							}
 						}
 					});
 				}
@@ -1681,7 +1688,7 @@ const Game = {
 		// ハードモード: 上限を超えているフルーツを安全に削除してからAnteを開始
 		if (Game.rogueRun.persistent) {
 			const overLimit = Composite.allBodies(engine.world).filter(
-				b => !b.isStatic && (b.position.y - (b.circleRadius || 0)) < loseHeight + 20
+				b => !b.isStatic && (b.position.y - (b._radius || b.circleRadius || 0)) < loseHeight + 20
 			);
 			if (overLimit.length) Composite.remove(engine.world, overLimit);
 			Game.rogueRun.anteStartTime = performance.now();
@@ -2504,12 +2511,8 @@ const Game = {
 					return;
 				}
 
-				// 爆弾フルーツ接触: 폭발
-				if (bodyA.isBomb || bodyB.isBomb) {
-					const bomb = bodyA.isBomb ? bodyA : bodyB;
-					setTimeout(() => Game.explodeBomb(bomb), 50);
-					continue;
-				}
+				// 爆弾フルーツは合体しない（タップ専用: 自動爆発なし）
+				if (bodyA.isBomb || bodyB.isBomb) continue;
 
 				// お邪魔フルーツは合体不可
 				if (bodyA.isBossEnemy || bodyB.isBossEnemy) continue;
@@ -2546,6 +2549,8 @@ const Game = {
 						// boss_blackhole: clear all fruits from board
 						if (rr.relics.some(r => r.id === 'boss_blackhole')) {
 							setTimeout(() => {
+								// フロアクリアやゲームオーバー後に誤爆しないよう状態チェック
+								if (Game.stateIndex !== GameStates.READY && Game.stateIndex !== GameStates.DROP) return;
 								const allFruits = Composite.allBodies(engine.world).filter(b => !b.isStatic && !b.isBossEnemy);
 								if (allFruits.length) Composite.remove(engine.world, allFruits);
 								Game.showCelebration('🕳️ ブラックホール！盤面消滅！');
@@ -2580,16 +2585,16 @@ const Game = {
 					Composite.remove(engine.world, [bodyA, bodyB]);
 
 					// boss_instant_max: if new fruit would be max size, remove instantly for score
-					if (rr.active && rr.relics.some(r => r.id === 'boss_instant_max') && isMaxMerge) {
+					const instantMax = rr.active && rr.relics.some(r => r.id === 'boss_instant_max') && isMaxMerge;
+					if (instantMax) {
 						const sv = Game.fruitSizes[newSize].scoreValue;
 						Game.extraPoints += sv;
-						Game.addPop(midX, midY, popR);
 						Game.showCelebration('☄️ 極限消滅！ Max即時消滅！');
 					} else {
 						Composite.add(engine.world, Game.generateFruitBody(midX, midY, newSize));
 					}
 
-					Game.addPop(midX, midY, popR);
+					Game.addPop(midX, midY, popR); // 一度だけ呼ぶ
 					Game.addScorePopup(midX, midY, sizeIndex);
 					Game.handleCombo(sizeIndex);
 
@@ -2616,7 +2621,7 @@ const Game = {
 
 					Game.calculateScore();
 					if (Game.settings.gameMode === 'challenge') Game.checkChallenge();
-					if (isMaxMerge && !rr.relics.some(r => r.id === 'boss_instant_max')) {
+					if (isMaxMerge && !instantMax) {
 						Game.showCelebration('🎊 次は最大フルーツ！ 🎊');
 					}
 				}
@@ -2648,10 +2653,22 @@ const Game = {
 		if (Game.rogueRun.active && Game.rogueRun.persistent &&
 		    performance.now() - Game.rogueRun.anteStartTime < 1500) return;
 
-		// ── boss_overtime: 5-second grace period (one-time) ────
 		const rr = Game.rogueRun;
+
+		// ── boss_overtime: カウント中は再トリガーをブロック ────
+		if (rr.active && rr._overtimeActive) return;
+
+		// ── boss_overtime: 5秒猶予開始（1回限り） ────
 		if (rr.active && !rr._overtimeUsed && rr.relics.some(r => r.id === 'boss_overtime')) {
-			rr._overtimeUsed = true;
+			rr._overtimeUsed  = true;
+			rr._overtimeActive = true;
+			// 危険ゾーンのフルーツを即座に除去してから物理再開
+			const danger = Composite.allBodies(engine.world).filter(
+				b => !b.isStatic && (b.position.y - (b._radius || b.circleRadius || 0)) < loseHeight + 20
+			);
+			if (danger.length) Composite.remove(engine.world, danger);
+			physicsEnabled = true; // physics を維持して続行可能に
+
 			const el = document.getElementById('overtime-countdown');
 			if (el) {
 				el.style.display = 'block';
@@ -2663,11 +2680,13 @@ const Game = {
 					if (sec <= 0) {
 						clearInterval(tick);
 						if (el) el.style.display = 'none';
-						Game.loseGame();
+						rr._overtimeActive = false;
+						Game.loseGame(); // カウント終了後に正式に判定
 					}
 				}, 1000);
 			}
-			return; // grace period in effect
+			Game.showCelebration('⏳ 最後の抵抗！ 5秒間生き延びろ！');
+			return;
 		}
 
 		// ── Shield charges (roguerun only) ──────────────────────
@@ -2675,7 +2694,7 @@ const Game = {
 			Game.rogueRun.shieldCharges--;
 			// Remove fruits above lose line to prevent re-trigger
 			const danger = Composite.allBodies(engine.world).filter(
-				b => !b.isStatic && (b.position.y - (b.circleRadius || 0)) < loseHeight + 10
+				b => !b.isStatic && (b.position.y - (b._radius || b.circleRadius || 0)) < loseHeight + 10
 			);
 			if (danger.length) Composite.remove(engine.world, danger);
 			Game.updateRogueHud();
@@ -2894,15 +2913,19 @@ const Game = {
 			const latestFruit = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize);
 			Composite.add(engine.world, latestFruit);
 
-			// boss_double_drop: 150ms later, second fruit slightly offset
+			// boss_double_drop: 400ms後に反対側から2個目を落下
 			if (hasDouble) {
 				const size2 = Game.currentFruitSize;
-				const x2 = Math.max(50, Math.min(Game.width - 50, x + (Math.random() < 0.5 ? -50 : 50)));
+				// フルーツ直径×2 以上の間隔を確保（最低120px）
+				const minGap = Math.max(120, Game.fruitSizes[size2].radius * 2.5);
+				const direction = Math.random() < 0.5 ? 1 : -1;
+				const x2 = Math.max(60, Math.min(Game.width - 60, x + direction * minGap));
 				setTimeout(() => {
 					if (Game.stateIndex !== GameStates.LOSE && Game.stateIndex !== GameStates.SHOP) {
-						Composite.add(engine.world, Game.generateFruitBody(x2, previewBallHeight, size2));
+						// 通常ドロップと同じy位置だが水平距離が十分あるため即合体しない
+						Composite.add(engine.world, Game.generateFruitBody(x2, previewBallHeight + 10, size2));
 					}
-				}, 150);
+				}, 400);
 			}
 		}
 
