@@ -115,6 +115,88 @@ const RELIC_DEFS = [
 // Minimum zone required to see each rarity in the shop
 const MIN_ZONE_FOR_RARITY = { common: 1, uncommon: 1, rare: 1, epic: 2, legendary: 3 };
 
+// ============================================================
+// BOSS RELIC DEFINITIONS
+// ============================================================
+const BOSS_RELIC_DEFS = {
+	rare: [
+		{ id: 'boss_double_drop', name: '双子の果実', emoji: '👯', rarity: 'boss_rare',
+		  desc: '1回のドロップで2個同時にフルーツを落とせる' },
+		{ id: 'boss_size7_clear', name: '七星破壊', emoji: '💫', rarity: 'boss_rare',
+		  desc: 'サイズ7以上の合体でサイズ0のフルーツを全削除' },
+		{ id: 'boss_square', name: '方陣変化', emoji: '⬜', rarity: 'boss_rare',
+		  desc: '新しくドロップするフルーツが四角形になる（物理判定も四角）' },
+		{ id: 'boss_overtime', name: '最後の抵抗', emoji: '⏳', rarity: 'boss_rare',
+		  desc: 'ゲームオーバーライン超えても5秒耐えられる（1回限り）' },
+	],
+	epic: [
+		{ id: 'boss_shrink', name: '次元圧縮', emoji: '🔬', rarity: 'boss_epic',
+		  desc: '全フルーツのサイズが0.8倍に縮小。より多く詰め込める' },
+		{ id: 'boss_skip', name: '進化跳躍', emoji: '⚡', rarity: 'boss_epic',
+		  desc: '15%の確率で合体時に進化を1段階スキップ' },
+		{ id: 'boss_reroll', name: '果実交換', emoji: '🔄', rarity: 'boss_epic',
+		  desc: '次のフルーツをリロールできる（無制限）' },
+		{ id: 'boss_blackhole', name: 'ブラックホール', emoji: '🕳️', rarity: 'boss_epic',
+		  desc: '最大サイズ同士の合体で盤面の全フルーツを消去する' },
+	],
+	legendary: [
+		{ id: 'boss_bomb', name: '爆破の祝福', emoji: '💣', rarity: 'boss_legendary',
+		  desc: '15%の確率でタップ爆破フルーツが降ってくる。タップで周囲を消去' },
+		{ id: 'boss_reroll_stock', name: '果実の宝庫', emoji: '📦', rarity: 'boss_legendary',
+		  desc: '次のフルーツをリロールできる（3回ストック）' },
+		{ id: 'boss_instant_max', name: '極限消滅', emoji: '☄️', rarity: 'boss_legendary',
+		  desc: '最大サイズのフルーツが生成された瞬間に消滅してスコアを獲得' },
+	],
+};
+
+// ============================================================
+// SYNERGY DEFINITIONS
+// ============================================================
+const SYNERGY_DEFS = [
+	{ relics: ['coin_magnet', 'trident'], name: '硬貨の嵐', emoji: '🌪️', desc: '合体ごとにコイン+1追加', effect: 'extra_coins', bonus: 1 },
+	{ relics: ['combo_master', 'dragon'], name: '竜の怒り覚醒', emoji: '🐲', desc: 'コンボボーナス×2', effect: 'combo_x2' },
+	{ relics: ['cosmos', 'rainbow'], name: '宇宙の彩り', emoji: '🌌', desc: '合体スコアに+50%追加', effect: 'score_bonus', bonus: 0.5 },
+	{ relics: ['shield', 'talisman'], name: '鉄壁の守護', emoji: '🛡️', desc: 'シールド+2（習得時）', effect: 'shield_bonus', bonus: 2 },
+	{ relics: ['rebirth', 'meteor'], name: '再生の豪雨', emoji: '🌧️', desc: '毎合体5%でサイズ1が追加降下', effect: 'rebirth_plus' },
+];
+
+// ============================================================
+// EVENT DEFINITIONS
+// ============================================================
+const EVENT_DEFS = [
+	{ id: 'evt_score2x',      name: 'スコア2倍タイム！',  emoji: '✨', desc: 'このフロア中、合体スコアが2倍', type: 'score2x' },
+	{ id: 'evt_coins50',      name: 'コイン大量！',        emoji: '🪙', desc: 'コインを50枚獲得',             type: 'coins', amount: 50 },
+	{ id: 'evt_clear3',       name: '空間整理',            emoji: '💨', desc: '盤面のフルーツを3個消去',       type: 'clear3' },
+	{ id: 'evt_sale30',       name: 'レリックセール！',    emoji: '🏷️', desc: 'このフロアのショップが30%OFF',  type: 'sale30' },
+	{ id: 'evt_gravity_half', name: '無重力ゾーン！',      emoji: '🌌', desc: 'このフロアの重力が半分',        type: 'gravity_half' },
+	{ id: 'evt_combo2x',      name: 'コンボフィーバー！',  emoji: '🔥', desc: 'コンボボーナスが2倍',           type: 'combo2x' },
+	{ id: 'evt_shield',       name: '守護の恵み',          emoji: '🛡️', desc: 'シールドを1つ獲得',             type: 'shield' },
+	{ id: 'evt_bad_coins',    name: '財布を盗まれた！',    emoji: '😈', desc: 'コイン-30（呪い）',             type: 'coins', amount: -30 },
+];
+
+// ============================================================
+// MILESTONE DEFINITIONS
+// ============================================================
+const MILESTONE_DEFS = [
+	{ anteIndex: 2,  name: 'ゾーン1中盤突破', emoji: '🌱', reward: { coins: 20 } },
+	{ anteIndex: 4,  name: 'ゾーン1 BOSS討伐', emoji: '⚔️', reward: { coins: 40 } },
+	{ anteIndex: 7,  name: 'ゾーン2中盤突破', emoji: '🔥', reward: { coins: 50 } },
+	{ anteIndex: 9,  name: 'ゾーン2 BOSS討伐', emoji: '⚔️', reward: { coins: 80 } },
+	{ anteIndex: 12, name: 'ゾーン3中盤突破', emoji: '⚡', reward: { coins: 80 } },
+];
+
+// ============================================================
+// CURSE DEFINITIONS
+// ============================================================
+const CURSE_DEFS = [
+	{ id: 'curse_gravity', name: '重力の呪い',     emoji: '⬇️', rarity: 'curse',
+	  desc: '重力1.5倍になる。対価: コイン+80', coinBonus: 80 },
+	{ id: 'curse_target',  name: '高難易度の呪い', emoji: '📈', rarity: 'curse',
+	  desc: 'スコア目標+25%。対価: コイン+60', coinBonus: 60 },
+	{ id: 'curse_size',    name: '縮小の呪い',     emoji: '🔻', rarity: 'curse',
+	  desc: 'ドロップできるサイズ上限が-1。対価: スコアボーナス+20%', scoreBuff: 0.20 },
+];
+
 // ── ZONE CONFIG: 3 zones × 5 antes ──────────────────────────
 const ZONE_CONFIG = [
 	// Zone 1: 入門地帯
@@ -459,6 +541,10 @@ const Game = {
 			}
 		}
 
+		// curse_size: cap drop size to 3
+		if (rr.active && rr.activeCurses && rr.activeCurses.includes('curse_size')) {
+			size = Math.min(size, 3);
+		}
 		Game.nextFruitSize = size;
 		Game.elements.nextFruitImg.src = `./assets/img/circle${size}.png`;
 	},
@@ -861,6 +947,17 @@ const Game = {
 		rerollCount:   0,       // re-rolls used this shop phase
 		purgeUsed:     false,   // purge token used this ante
 		sellPending:   null,    // relic idx awaiting sell-confirm tap (Hardroguerun)
+		// ── v14.2 additions ──
+		isBossShop:      false, // current shop is post-boss
+		bossChestDone:   false, // chest already opened this shop
+		activeEvent:     null,  // current floor event (from EVENT_DEFS)
+		activeCurses:    [],    // active curse IDs
+		milestonesClaimed: [],  // array of claimed anteIndex values
+		saleActive:      false, // shop sale (from event)
+		rerollCharges:   -999,  // -1=unlimited, 0+=counted, -999=no relic
+		activeSynergies: [],    // active synergy keys
+		curseoffer:      null,  // current curse offer in shop
+		_overtimeUsed:   false, // boss_overtime already consumed
 	},
 
 	startRogueRun: function () {
@@ -889,6 +986,16 @@ const Game = {
 		rr.rerollCount   = 0;
 		rr.purgeUsed     = false;
 		rr.sellPending   = null;
+		rr.isBossShop      = false;
+		rr.bossChestDone   = false;
+		rr.activeEvent     = null;
+		rr.activeCurses    = [];
+		rr.milestonesClaimed = [];
+		rr.saleActive      = false;
+		rr.rerollCharges   = -999;
+		rr.activeSynergies = [];
+		rr.curseoffer      = null;
+		rr._overtimeUsed   = false;
 
 		// Show rogue status bar, hide normal status
 		document.getElementById('game-status').style.display = 'none';
@@ -921,6 +1028,8 @@ const Game = {
 		let g = cfg.gravity;
 		if (rr.relics.some(r => r.id === 'gravity_heavy')) g += 0.28;
 		if (rr.arcana && rr.arcana.id === 'chariot') g *= 0.75;
+		// curse_gravity: multiply by 1.5
+		if (rr.activeCurses && rr.activeCurses.includes('curse_gravity')) g *= 1.5;
 		engine.gravity.y = g;
 
 		// ante_bonus relic: +50pts at ante start
@@ -939,6 +1048,32 @@ const Game = {
 					}
 				}
 			}, 600);
+		}
+
+		// 10% chance of random event
+		if (Math.random() < 0.10) {
+			const evt = EVENT_DEFS[Math.floor(rand() * EVENT_DEFS.length)];
+			rr.activeEvent = evt;
+			// Apply immediate effects
+			switch (evt.type) {
+				case 'coins':
+					rr.coins = Math.max(0, rr.coins + evt.amount);
+					break;
+				case 'clear3':
+					setTimeout(() => {
+						const nonStatic = Composite.allBodies(engine.world)
+							.filter(b => !b.isStatic && b.sizeIndex !== null).slice(0, 3);
+						if (nonStatic.length) Composite.remove(engine.world, nonStatic);
+					}, 1500);
+					break;
+				case 'gravity_half':
+					engine.gravity.y *= 0.5;
+					break;
+				case 'shield':
+					rr.shieldCharges++;
+					break;
+			}
+			Game.showEventPopup(evt);
 		}
 
 		Game.updateRogueHud();
@@ -984,9 +1119,55 @@ const Game = {
 				Game._tooltipTimer = setTimeout(() => { tooltip.style.display = 'none'; }, 3000);
 			});
 		});
+
+		// Reroll-fruit button visibility
+		const rerollFruitBtn = document.getElementById('btn-reroll-fruit');
+		if (rerollFruitBtn) {
+			if (rr.rerollCharges === -999) {
+				rerollFruitBtn.style.display = 'none';
+			} else {
+				rerollFruitBtn.style.display = '';
+				rerollFruitBtn.disabled = rr.rerollCharges === 0;
+				rerollFruitBtn.innerText = rr.rerollCharges === -1
+					? '🔄 次を交換'
+					: rr.rerollCharges > 0
+						? `🔄 次を交換 (${rr.rerollCharges})`
+						: '🔄 交換不可';
+			}
+		}
 	},
 
 	_tooltipTimer: null,
+	_pauseReasons: [],
+
+	pauseGame: function (reason) {
+		if (Game.stateIndex !== GameStates.READY && Game.stateIndex !== GameStates.DROP) return;
+		if (!Game._pauseReasons.includes(reason)) Game._pauseReasons.push(reason);
+		physicsEnabled = false;
+	},
+
+	resumeGame: function (reason) {
+		Game._pauseReasons = Game._pauseReasons.filter(r => r !== reason);
+		if (Game._pauseReasons.length === 0) {
+			const overlay = document.getElementById('pause-overlay');
+			if (overlay) overlay.style.display = 'none';
+			if (Game.stateIndex === GameStates.READY || Game.stateIndex === GameStates.DROP) {
+				physicsEnabled = true;
+			}
+		}
+	},
+
+	showEventPopup: function (evt) {
+		const el = document.getElementById('event-popup');
+		if (!el) return;
+		document.getElementById('event-popup-emoji').innerText = evt.emoji;
+		document.getElementById('event-popup-name').innerText  = evt.name;
+		document.getElementById('event-popup-desc').innerText  = evt.desc;
+		el.style.display = 'flex';
+		clearTimeout(Game._eventTimer);
+		Game._eventTimer = setTimeout(() => { el.style.display = 'none'; }, 3500);
+	},
+	_eventTimer: null,
 
 	// Called from calculateScore when score >= target
 	onAnteClear: function () {
@@ -1019,6 +1200,21 @@ const Game = {
 		const isZoneBoss   = rr.anteInZone >= rr.antesPerZone;
 		const nextZone     = rr.zone + 1;
 
+		// Set boss shop flag for post-boss antes
+		rr.isBossShop = isZoneBoss && !isFinalAnte;
+
+		// Milestone rewards
+		const milestone = MILESTONE_DEFS.find(m =>
+			m.anteIndex === rr.anteIndex && !rr.milestonesClaimed.includes(rr.anteIndex)
+		);
+		if (milestone) {
+			rr.milestonesClaimed.push(rr.anteIndex);
+			if (milestone.reward.coins) rr.coins += milestone.reward.coins;
+			setTimeout(() => {
+				Game.showCelebration(`${milestone.emoji} マイルストーン: ${milestone.name}！ 🪙+${milestone.reward.coins}`);
+			}, 400);
+		}
+
 		let celebMsg;
 		if (isFinalAnte) {
 			celebMsg = `👑 全Zone制覇！ 総スコア: ${rr.totalScore}`;
@@ -1041,6 +1237,17 @@ const Game = {
 
 	showShop: function () {
 		const rr = Game.rogueRun;
+
+		// Boss shop: show chests instead of normal relics
+		if (rr.isBossShop) {
+			rr.shopOffers    = [];
+			rr.bossChestDone = false;
+			rr.curseoffer    = null;
+			Game.renderShop();
+			document.getElementById('shop-overlay').style.display = 'flex';
+			return;
+		}
+
 		const ownedIds = rr.relics.map(r => r.id);
 
 		// Filter by zone availability and not already owned
@@ -1066,6 +1273,13 @@ const Game = {
 			if (!seen.has(relic.id)) { seen.add(relic.id); rr.shopOffers.push(relic); }
 		}
 
+		// 30% chance to offer a curse (max 2 active)
+		rr.curseoffer = null;
+		if (Math.random() < 0.30 && rr.activeCurses.length < 2) {
+			const avail = CURSE_DEFS.filter(c => !rr.activeCurses.includes(c.id));
+			if (avail.length > 0) rr.curseoffer = avail[Math.floor(rand() * avail.length)];
+		}
+
 		rr.rerollCount = 0;
 		Game.renderShop();
 		document.getElementById('shop-overlay').style.display = 'flex';
@@ -1083,13 +1297,58 @@ const Game = {
 		document.getElementById('shop-skip-btn').innerText =
 			nextCfg ? `${nextCfg.label} へ →  (${nextLabel})` : '次の Zone へ →';
 
-		// Re-roll button
-		const rerollCost = rr.rerollCount === 0 ? 0 : (rr.zone === 1 ? 20 : rr.zone === 2 ? 25 : 30);
+		// Re-roll button (hidden during boss shop)
 		const rerollEl = document.getElementById('shop-reroll-btn');
 		if (rerollEl) {
-			rerollEl.innerText = rr.rerollCount === 0 ? '🔄 Reroll (無料)' : `🔄 Reroll (🪙${rerollCost})`;
-			rerollEl.disabled  = rr.coins < rerollCost;
+			if (rr.isBossShop) {
+				rerollEl.style.display = 'none';
+			} else {
+				rerollEl.style.display = '';
+				const rerollCost = rr.rerollCount === 0 ? 0 : (rr.zone === 1 ? 20 : rr.zone === 2 ? 25 : 30);
+				rerollEl.innerText = rr.rerollCount === 0 ? '🔄 Reroll (無料)' : `🔄 Reroll (🪙${rerollCost})`;
+				rerollEl.disabled  = rr.coins < rerollCost;
+			}
 		}
+
+		// ── BOSS SHOP: show treasure chests ──────────────────
+		if (rr.isBossShop) {
+			const offersEl = document.getElementById('shop-offers');
+			if (!rr.bossChestDone) {
+				offersEl.innerHTML = `
+					<div class="boss-chest-title">🎁 ボスレリックチェスト<br><small style="font-weight:400;font-size:12px">1つだけ選べます</small></div>
+					<div class="boss-chest-row">
+						<div class="boss-chest" data-chest="rare">
+							<div class="chest-icon">📦</div>
+							<div class="chest-label">レア</div>
+							<div class="chest-chance">75%</div>
+						</div>
+						<div class="boss-chest" data-chest="epic">
+							<div class="chest-icon">💼</div>
+							<div class="chest-label">エピック</div>
+							<div class="chest-chance">50%</div>
+						</div>
+						<div class="boss-chest" data-chest="legendary">
+							<div class="chest-icon">👑</div>
+							<div class="chest-label">レジェンダリー</div>
+							<div class="chest-chance">25%</div>
+						</div>
+					</div>`;
+				offersEl.querySelectorAll('.boss-chest').forEach(el => {
+					el.addEventListener('click', () => Game.openBossChest(el.dataset.chest));
+				});
+			}
+			// Purge & curse hidden in boss shop
+			const purgeSection = document.getElementById('shop-purge-section');
+			if (purgeSection) purgeSection.innerHTML = '';
+			const curseSection = document.getElementById('shop-curse-section');
+			if (curseSection) curseSection.innerHTML = '';
+			document.getElementById('shop-sell-slots').style.display = 'none';
+			return;
+		}
+
+		// ── NORMAL SHOP ───────────────────────────────────────
+		// Restore visibility in case we came from a boss shop
+		document.getElementById('shop-sell-slots').style.display = '';
 
 		const rarityLabel = {
 			common: 'コモン', uncommon: 'アンコモン', rare: 'レア',
@@ -1098,6 +1357,8 @@ const Game = {
 
 		// Hermit arcana: first offer is free
 		const hermitActive = rr.arcana && rr.arcana.id === 'hermit' && !rr.arcanaState.hermitUsed;
+		// Sale30 event: relics 30% off
+		const saleActive   = rr.activeEvent && rr.activeEvent.type === 'sale30';
 
 		document.getElementById('shop-offers').innerHTML = rr.shopOffers.every(r => !r)
 			? '<div class="lb-empty">購入可能なレリックがありません</div>'
@@ -1113,11 +1374,13 @@ const Game = {
 					</div>`;
 				}
 				const isFree    = hermitActive && i === 0;
-				const effCost   = isFree ? 0 : r.cost;
+				const baseCost  = saleActive ? Math.ceil(r.cost * 0.7) : r.cost;
+				const effCost   = isFree ? 0 : baseCost;
 				const canAfford = rr.coins >= effCost;
 				const isFull    = rr.relics.length >= 7;
 				const disabled  = (!canAfford || isFull) ? 'disabled' : '';
-				const reason    = isFull ? 'スロット満杯' : isFree ? '🎁 無料' : `🪙 ${r.cost}`;
+				const saleBadge = saleActive && !isFree ? ` <small style="color:#ffd700">-30%</small>` : '';
+				const reason    = isFull ? 'スロット満杯' : isFree ? '🎁 無料' : `🪙 ${effCost}${saleBadge}`;
 				return `<div class="joker-card rarity-${r.rarity}">
 					<div class="joker-card-emoji">${r.emoji}</div>
 					<div class="joker-card-info">
@@ -1126,9 +1389,30 @@ const Game = {
 						</div>
 						<div class="joker-card-desc">${r.desc}</div>
 					</div>
-					<button class="joker-buy-btn" data-shop-idx="${i}" ${disabled}>${reason}</button>
+					<button class="joker-buy-btn" data-shop-idx="${i}" data-eff-cost="${effCost}" ${disabled}>${reason}</button>
 				</div>`;
 			}).join('');
+
+		// Curse offer section
+		const curseSection = document.getElementById('shop-curse-section');
+		if (curseSection) {
+			if (rr.curseoffer) {
+				const c = rr.curseoffer;
+				const reward = c.coinBonus
+					? `🪙+${c.coinBonus}`
+					: c.scoreBuff ? `スコアボーナス+${Math.round(c.scoreBuff * 100)}%` : '';
+				curseSection.innerHTML = `
+					<div style="background:rgba(80,0,80,0.15);border:2px solid #9b59b6;border-radius:12px;padding:12px 14px">
+						<div style="font-size:13px;font-weight:900;color:#9b59b6;margin-bottom:6px">${c.emoji} 呪いの提案 <span style="font-size:10px;color:var(--col-text-muted)">（任意）</span></div>
+						<div style="font-size:12px;font-weight:700">${c.name}</div>
+						<div style="font-size:11px;color:var(--col-text-muted);margin:4px 0">${c.desc}</div>
+						<button id="shop-curse-accept-btn" style="margin-top:8px;font-family:inherit;font-size:12px;font-weight:700;padding:7px 16px;border-radius:10px;border:none;background:#9b59b6;color:#fff;cursor:pointer">呪いを受け入れる → ${reward}</button>
+					</div>`;
+				document.getElementById('shop-curse-accept-btn').addEventListener('click', () => Game.acceptCurse(c));
+			} else {
+				curseSection.innerHTML = '';
+			}
+		}
 
 		// Purge Token (Hardroguerun only)
 		const purgeSection = document.getElementById('shop-purge-section');
@@ -1180,7 +1464,9 @@ const Game = {
 		if (!relic) return; // null = already purchased (greyed-out guard)
 
 		const hermitFree = rr.arcana && rr.arcana.id === 'hermit' && !rr.arcanaState.hermitUsed && idx === 0;
-		const cost = hermitFree ? 0 : relic.cost;
+		const saleActive = rr.activeEvent && rr.activeEvent.type === 'sale30';
+		const baseCost   = saleActive ? Math.ceil(relic.cost * 0.7) : relic.cost;
+		const cost       = hermitFree ? 0 : baseCost;
 
 		if (rr.coins < cost || rr.relics.length >= 7) return;
 
@@ -1195,8 +1481,124 @@ const Game = {
 		if (relic.id === 'shield')   rr.shieldCharges += 1;
 		if (relic.id === 'talisman') rr.shieldCharges += 3;
 
+		// Check synergy activation
+		const ownedIds = new Set(rr.relics.map(r => r.id));
+		for (const syn of SYNERGY_DEFS) {
+			const key = syn.relics.slice().sort().join('+');
+			if (!rr.activeSynergies.includes(key) && syn.relics.every(id => ownedIds.has(id))) {
+				rr.activeSynergies.push(key);
+				// Immediate synergy effects
+				if (syn.effect === 'shield_bonus') rr.shieldCharges += (syn.bonus || 0);
+				Game.showCelebration(`${syn.emoji} シナジー発動: ${syn.name}！`);
+			}
+		}
+
 		Game.renderShop();
 		Game.updateRogueHud();
+	},
+
+	openBossChest: function (rarity) {
+		const rr = Game.rogueRun;
+		if (rr.bossChestDone) return;
+		rr.bossChestDone = true;
+
+		// Grey out all chests; highlight chosen one
+		document.querySelectorAll('.boss-chest').forEach(el => {
+			el.classList.add(el.dataset.chest === rarity ? 'selected' : 'disabled');
+		});
+
+		const chances = { rare: 0.75, epic: 0.50, legendary: 0.25 };
+		const success = Math.random() < (chances[rarity] || 0);
+		const offersEl = document.getElementById('shop-offers');
+
+		if (success) {
+			const pool     = BOSS_RELIC_DEFS[rarity] || [];
+			const ownedIds = rr.relics.map(r => r.id);
+			const avail    = pool.filter(r => !ownedIds.includes(r.id));
+			if (avail.length > 0) {
+				const relic = avail[Math.floor(rand() * avail.length)];
+				rr.relics.push(relic);
+				// Immediate relic effects
+				if (relic.id === 'boss_reroll')       rr.rerollCharges = -1;   // unlimited
+				if (relic.id === 'boss_reroll_stock') rr.rerollCharges = 3;    // 3 charges
+				if (relic.id === 'boss_shrink') {
+					// Immediately shrink all existing fruits
+					Composite.allBodies(engine.world).forEach(b => {
+						if (!b.isStatic && typeof b.sizeIndex === 'number') {
+							Matter.Body.scale(b, 0.8, 0.8);
+							b._radius = (b._radius || b.circleRadius || Game.fruitSizes[b.sizeIndex].radius) * 0.8;
+						}
+					});
+				}
+				const rarLabels = { rare: 'レア', epic: 'エピック', legendary: 'レジェンダリー' };
+				offersEl.insertAdjacentHTML('beforeend', `
+					<div style="margin-top:12px;text-align:center;padding:12px;background:rgba(255,215,0,0.1);border:2px solid #FFD700;border-radius:12px">
+						<div style="font-size:28px">${relic.emoji}</div>
+						<div style="font-weight:900">${relic.name}
+							<span style="font-size:10px;background:#FFD700;color:#333;padding:2px 6px;border-radius:6px;margin-left:4px">${rarLabels[rarity]}</span>
+						</div>
+						<div style="font-size:11px;color:var(--col-text-muted);margin-top:4px">${relic.desc}</div>
+						<div style="color:#FFD700;font-weight:700;margin-top:6px">🎉 ボスレリック獲得！</div>
+					</div>`);
+				Game.updateRogueHud();
+				return;
+			}
+		}
+		// Failure
+		offersEl.insertAdjacentHTML('beforeend', `
+			<div style="margin-top:12px;text-align:center;padding:12px;opacity:0.6">
+				💨 何も出ませんでした…
+			</div>`);
+	},
+
+	acceptCurse: function (curse) {
+		const rr = Game.rogueRun;
+		if (!curse || rr.activeCurses.includes(curse.id)) return;
+		rr.activeCurses.push(curse.id);
+		rr.curseoffer = null;
+
+		// Coin reward
+		if (curse.coinBonus) rr.coins += curse.coinBonus;
+
+		// Immediate effects
+		if (curse.id === 'curse_gravity') {
+			engine.gravity.y *= 1.5;
+		}
+
+		Game.showCelebration(`😈 ${curse.name} を受け入れた！`);
+		Game.renderShop();
+		Game.updateRogueHud();
+	},
+
+	rerollCurrentFruit: function () {
+		const rr = Game.rogueRun;
+		if (rr.rerollCharges === -999) return; // no relic
+		if (rr.rerollCharges === 0) return;    // out of charges (counted mode)
+		if (Game.stateIndex !== GameStates.READY) return;
+
+		// Decrement charges (-1 = unlimited, stays -1)
+		if (rr.rerollCharges > 0) rr.rerollCharges--;
+
+		// Randomise next fruit size (avoids current size if possible)
+		let newSize;
+		for (let tries = 0; tries < 8; tries++) {
+			newSize = Math.floor(rand() * 5);
+			if (newSize !== Game.nextFruitSize) break;
+		}
+		if (rr.activeCurses && rr.activeCurses.includes('curse_size')) newSize = Math.min(newSize, 3);
+		Game.nextFruitSize = newSize;
+		Game.elements.nextFruitImg.src = `./assets/img/circle${newSize}.png`;
+		Game.updateRogueHud();
+		// Update reroll button label
+		const btn = document.getElementById('btn-reroll-fruit');
+		if (btn) {
+			btn.innerText = rr.rerollCharges === -1
+				? '🔄 次を交換'
+				: rr.rerollCharges > 0
+					? `🔄 次を交換 (${rr.rerollCharges})`
+					: '🔄 交換不可';
+			btn.disabled = rr.rerollCharges === 0;
+		}
 	},
 
 	rerollShop: function () {
@@ -1207,7 +1609,7 @@ const Game = {
 		rr.rerollCount++;
 		// Regenerate offers (same logic as showShop)
 		const ownedIds = rr.relics.map(r => r.id);
-		const shopOfferIds = new Set(rr.shopOffers.map(r => r.id));
+		const shopOfferIds = new Set(rr.shopOffers.filter(r => r).map(r => r.id));
 		const available = RELIC_DEFS.filter(r =>
 			!ownedIds.includes(r.id) &&
 			!shopOfferIds.has(r.id) &&
@@ -1239,6 +1641,10 @@ const Game = {
 			const bodies = Composite.allBodies(engine.world).filter(b => !b.isStatic);
 			Composite.remove(engine.world, bodies);
 		}
+
+		// Reset per-ante event/curse state
+		Game.rogueRun.activeEvent = null;
+		Game.rogueRun.curseoffer  = null;
 
 		// Reset per-ante state
 		Game.rogueRun.anteIndex++;
@@ -1361,6 +1767,45 @@ const Game = {
 					bonusScore += baseScore; // total ×2
 					break;
 			}
+		}
+
+		// ── Synergy effects ──
+		for (const syn of SYNERGY_DEFS) {
+			const key = syn.relics.slice().sort().join('+');
+			if (!rr.activeSynergies.includes(key)) continue;
+			switch (syn.effect) {
+				case 'extra_coins':
+					bonusCoins += (syn.bonus || 1);
+					break;
+				case 'combo_x2':
+					bonusScore += Math.floor(Game.fruitSizes[sizeIndex].scoreValue * (Game.combo - 1) * 0.4);
+					break;
+				case 'score_bonus':
+					bonusScore += Math.round(baseScore * (syn.bonus || 0));
+					break;
+				case 'rebirth_plus':
+					if (Math.random() < 0.05) {
+						setTimeout(() => {
+							if (Game.stateIndex !== GameStates.LOSE && Game.stateIndex !== GameStates.SHOP) {
+								Composite.add(engine.world, Game.generateFruitBody(midX, midY - 30, 0));
+							}
+						}, 220);
+					}
+					break;
+			}
+		}
+
+		// ── Active event effects ──
+		if (rr.activeEvent) {
+			if (rr.activeEvent.type === 'score2x') bonusScore += baseScore + bonusScore; // double total score
+			if (rr.activeEvent.type === 'combo2x' && Game.combo > 1) {
+				bonusScore += Math.floor(Game.fruitSizes[sizeIndex].scoreValue * (Game.combo - 1) * 0.4);
+			}
+		}
+
+		// ── Curse score buff ──
+		if (rr.activeCurses && rr.activeCurses.includes('curse_size')) {
+			bonusScore += Math.round(baseScore * 0.20);
 		}
 
 		rr.coins += bonusCoins;
@@ -1657,30 +2102,44 @@ const Game = {
 
 		syncModeBtns(Game.settings.gameMode);
 
-		// カテゴリーボタン: トグルでサブメニュー表示
+		// ローグランカテゴリーボタン: クリックでモーダル表示
 		const catBtn  = document.getElementById('btn-category-roguerun');
 		const submenu = document.getElementById('roguerun-submenu');
-		if (catBtn) {
+		const rogueModal = document.getElementById('roguerun-modal');
+		if (submenu) submenu.style.display = 'none'; // always hidden; use modal instead
+		if (catBtn && rogueModal) {
 			catBtn.addEventListener('click', () => {
-				const isOpen = submenu.style.display !== 'none';
-				if (isOpen) {
-					// サブメニューを閉じる（モードはそのまま）
-					submenu.style.display = 'none';
-					catBtn.classList.remove('category-open');
-				} else {
-					// サブメニューを開き、デフォルトで roguerun を選択
-					submenu.style.display = 'flex';
-					catBtn.classList.add('category-open');
-					if (!ROGUE_MODES.includes(Game.settings.gameMode)) {
-						Game.settings.gameMode = 'roguerun';
-						syncModeBtns('roguerun');
-						Game.saveSettings();
-					}
+				// Sync active card
+				rogueModal.querySelectorAll('.rogue-mode-card').forEach(card => {
+					card.classList.toggle('active', card.dataset.mode === Game.settings.gameMode);
+				});
+				rogueModal.style.display = 'flex';
+			});
+		}
+
+		// ローグランモーダル: カード選択
+		if (rogueModal) {
+			rogueModal.querySelectorAll('.rogue-mode-card').forEach(card => {
+				card.addEventListener('click', () => {
+					Game.settings.gameMode = card.dataset.mode;
+					syncModeBtns(card.dataset.mode);
+					Game.saveSettings();
+					rogueModal.querySelectorAll('.rogue-mode-card').forEach(c =>
+						c.classList.toggle('active', c === card));
+				});
+			});
+			document.getElementById('roguerun-modal-close').addEventListener('click', () => {
+				rogueModal.style.display = 'none';
+				// Ensure default roguerun is selected if no rogue mode chosen yet
+				if (!ROGUE_MODES.includes(Game.settings.gameMode)) {
+					Game.settings.gameMode = 'roguerun';
+					syncModeBtns('roguerun');
+					Game.saveSettings();
 				}
 			});
 		}
 
-		// サブモードボタン（mode-btn-sub）
+		// サブモードボタン（mode-btn-sub, フォールバック）
 		document.querySelectorAll('.mode-btn-sub').forEach(btn => {
 			btn.addEventListener('click', () => {
 				Game.settings.gameMode = btn.dataset.mode;
@@ -1714,21 +2173,69 @@ const Game = {
 			}
 		};
 
+		// ── Pause overlay helpers ──
+		const showPauseConfirm = () => {
+			const overlay = document.getElementById('pause-overlay');
+			const confirm = document.getElementById('pause-confirm');
+			const idle    = document.getElementById('pause-idle-msg');
+			if (!overlay) return;
+			if (confirm) confirm.style.display = 'block';
+			if (idle)    idle.style.display    = 'none';
+			overlay.style.display = 'flex';
+		};
+		const showPauseIdle = () => {
+			const overlay = document.getElementById('pause-overlay');
+			const confirm = document.getElementById('pause-confirm');
+			const idle    = document.getElementById('pause-idle-msg');
+			if (!overlay) return;
+			if (confirm) confirm.style.display = 'none';
+			if (idle)    idle.style.display    = 'block';
+			overlay.style.display = 'flex';
+		};
+
+		// Pause confirm yes/no
+		const confirmYes = document.getElementById('pause-confirm-yes');
+		const confirmNo  = document.getElementById('pause-confirm-no');
+		if (confirmYes) {
+			confirmYes.addEventListener('click', async () => {
+				if (Game.stateIndex === GameStates.LOSE) {
+					await saveScores(Game.elements.playerNameInput.value);
+				}
+				window.location.reload();
+			});
+		}
+		if (confirmNo) {
+			confirmNo.addEventListener('click', () => {
+				document.getElementById('pause-overlay').style.display = 'none';
+				Game.resumeGame('home');
+			});
+		}
+
 		// ── Home button (status bar) ──
 		document.getElementById('btn-home').addEventListener('click', async function () {
-			if (Game.stateIndex === GameStates.LOSE) {
-				await saveScores(Game.elements.playerNameInput.value);
+			if (Game.stateIndex === GameStates.LOSE || Game.stateIndex === GameStates.MENU ||
+			    Game.stateIndex === GameStates.SHOP) {
+				if (Game.stateIndex === GameStates.LOSE) await saveScores(Game.elements.playerNameInput.value);
+				window.location.reload();
+				return;
 			}
-			window.location.reload();
+			Game.pauseGame('home');
+			showPauseConfirm();
 		});
 
 		// ── Rogue home button ──
 		document.getElementById('btn-rogue-home').addEventListener('click', () => {
-			window.location.reload();
+			if (Game.stateIndex === GameStates.LOSE || Game.stateIndex === GameStates.SHOP) {
+				window.location.reload();
+				return;
+			}
+			Game.pauseGame('home');
+			showPauseConfirm();
 		});
 
 		// ── Settings button in rogue status bar ──
 		document.getElementById('btn-settings-rogue').addEventListener('click', () => {
+			Game.pauseGame('settings');
 			Game.elements.settingsOverlay.style.display = 'flex';
 		});
 
@@ -1742,10 +2249,12 @@ const Game = {
 
 		// ── Settings panel events ──
 		document.getElementById('btn-settings').addEventListener('click', () => {
+			Game.pauseGame('settings');
 			Game.elements.settingsOverlay.style.display = 'flex';
 		});
 		document.getElementById('settings-close').addEventListener('click', () => {
 			Game.elements.settingsOverlay.style.display = 'none';
+			Game.resumeGame('settings');
 		});
 		document.getElementById('bgm-volume').addEventListener('input', e => {
 			Game.settings.bgmVolume = +e.target.value;
@@ -1835,6 +2344,12 @@ const Game = {
 		});
 		document.getElementById('shop-reroll-btn').addEventListener('click', () => Game.rerollShop());
 
+		// ── Reroll-fruit button (boss_reroll / boss_reroll_stock relics) ──
+		const rerollFruitBtn = document.getElementById('btn-reroll-fruit');
+		if (rerollFruitBtn) {
+			rerollFruitBtn.addEventListener('click', () => Game.rerollCurrentFruit());
+		}
+
 		// ── Game-end events ──
 		document.getElementById('game-end-restart').addEventListener('click', async function () {
 			this.innerText = '保存中...'; this.disabled = true;
@@ -1856,16 +2371,22 @@ const Game = {
 			Game.takeScreenshot();
 		});
 
-		// ── BGM: resume after tab switch / screen lock (iOS/Android) ──
+		// ── Tab visibility: pause when hidden, resume when visible ──
 		document.addEventListener('visibilitychange', () => {
-			if (document.hidden) return;
 			const bgm = Game.sounds.backgroundMusic;
-			if (
-				Game.stateIndex !== GameStates.MENU &&
-				Game.stateIndex !== GameStates.LOSE &&
-				bgm.paused && !bgm.muted
-			) {
-				bgm.play().catch(() => {});
+			if (document.hidden) {
+				Game.pauseGame('tab');
+				if (!bgm.paused) bgm.pause();
+			} else {
+				Game.resumeGame('tab');
+				// BGM: resume if was playing
+				if (
+					Game.stateIndex !== GameStates.MENU &&
+					Game.stateIndex !== GameStates.LOSE &&
+					bgm.paused && !bgm.muted
+				) {
+					bgm.play().catch(() => {});
+				}
 			}
 		});
 
@@ -1944,6 +2465,19 @@ const Game = {
 
 		// ── Mouse events ──
 		Events.on(mouseConstraint, 'mouseup', function (e) {
+			// Bomb fruit tap detection
+			const mx = e.mouse.position.x;
+			const my = e.mouse.position.y;
+			const bombHit = Composite.allBodies(engine.world).find(b => {
+				if (!b.isBomb || b.popped) return false;
+				const dx = b.position.x - mx;
+				const dy = b.position.y - my;
+				return Math.sqrt(dx * dx + dy * dy) < (b._radius || 36) + 8;
+			});
+			if (bombHit) {
+				Game.explodeBomb(bombHit);
+				return;
+			}
 			Game.addFruit(e.mouse.position.x);
 		});
 
@@ -1960,25 +2494,36 @@ const Game = {
 
 				if (bodyA.isStatic || bodyB.isStatic) continue;
 
-				const aY = bodyA.position.y + bodyA.circleRadius;
-				const bY = bodyB.position.y + bodyB.circleRadius;
+				const rA = bodyA._radius || bodyA.circleRadius || 30;
+				const rB = bodyB._radius || bodyB.circleRadius || 30;
+				const aY = bodyA.position.y + rA;
+				const bY = bodyB.position.y + rB;
 
 				if (aY < loseHeight || bY < loseHeight) {
 					Game.loseGame();
 					return;
 				}
 
+				// 爆弾フルーツ接触: 폭발
+				if (bodyA.isBomb || bodyB.isBomb) {
+					const bomb = bodyA.isBomb ? bodyA : bodyB;
+					setTimeout(() => Game.explodeBomb(bomb), 50);
+					continue;
+				}
+
 				// お邪魔フルーツは合体不可
 				if (bodyA.isBossEnemy || bodyB.isBossEnemy) continue;
 
 				if (bodyA.sizeIndex !== bodyB.sizeIndex) continue;
+				if (bodyA.sizeIndex === null || bodyB.sizeIndex === null) continue;
 				if (bodyA.popped || bodyB.popped) continue;
 
 				const sizeIndex = bodyA.sizeIndex;
-				const isMaxSize = (sizeIndex === Game.fruitSizes.length - 1);  // 最大サイズ同士の合体？
+				const isMaxSize = (sizeIndex === Game.fruitSizes.length - 1);
 
 				const midX = (bodyA.position.x + bodyB.position.x) / 2;
 				const midY = (bodyA.position.y + bodyB.position.y) / 2;
+				const popR  = bodyA._radius || bodyA.circleRadius || 30;
 
 				bodyA.popped = true;
 				bodyB.popped = true;
@@ -1987,16 +2532,25 @@ const Game = {
 				Game.sounds[`pop${sizeIndex}`].play();
 
 				if (isMaxSize) {
-					// 最大サイズ同士の合体: スコア加算して消滅（スイカゲーム仕様）
+					// 最大サイズ同士: スコア加算して消滅
 					const scoreValue = Game.fruitSizes[sizeIndex].scoreValue;
 					Game.extraPoints += scoreValue;
 
 					Composite.remove(engine.world, [bodyA, bodyB]);
-					Game.addPop(midX, midY, bodyA.circleRadius);
+					Game.addPop(midX, midY, popR);
 					Game.addScorePopup(midX, midY, sizeIndex);
 					Game.handleCombo(sizeIndex);
 
 					if (Game.rogueRun.active) {
+						const rr = Game.rogueRun;
+						// boss_blackhole: clear all fruits from board
+						if (rr.relics.some(r => r.id === 'boss_blackhole')) {
+							setTimeout(() => {
+								const allFruits = Composite.allBodies(engine.world).filter(b => !b.isStatic && !b.isBossEnemy);
+								if (allFruits.length) Composite.remove(engine.world, allFruits);
+								Game.showCelebration('🕳️ ブラックホール！盤面消滅！');
+							}, 100);
+						}
 						const relicBonus = Game.applyRelicMergeEffect(sizeIndex, midX, midY);
 						if (relicBonus > 0) Game.extraPoints += relicBonus;
 						const arcanaBonus = Game.applyArcanaEffect(sizeIndex, midX, midY, true);
@@ -2011,16 +2565,46 @@ const Game = {
 					Game.showCelebration('✨ 最大フルーツ合体！消滅！✨');
 				} else {
 					// 通常の合体: 次のサイズフルーツ生成
-					const newSize = sizeIndex + 1;
+					let newSize = sizeIndex + 1;
+					const rr = Game.rogueRun;
+
+					// boss_skip: 15% chance skip one evolution
+					if (rr.active && rr.relics.some(r => r.id === 'boss_skip')) {
+						if (Math.random() < 0.15 && newSize + 1 < Game.fruitSizes.length - 1) {
+							newSize++;
+						}
+					}
+
 					const isMaxMerge = (newSize === Game.fruitSizes.length - 1);
 
 					Composite.remove(engine.world, [bodyA, bodyB]);
-					Composite.add(engine.world, Game.generateFruitBody(midX, midY, newSize));
-					Game.addPop(midX, midY, bodyA.circleRadius);
+
+					// boss_instant_max: if new fruit would be max size, remove instantly for score
+					if (rr.active && rr.relics.some(r => r.id === 'boss_instant_max') && isMaxMerge) {
+						const sv = Game.fruitSizes[newSize].scoreValue;
+						Game.extraPoints += sv;
+						Game.addPop(midX, midY, popR);
+						Game.showCelebration('☄️ 極限消滅！ Max即時消滅！');
+					} else {
+						Composite.add(engine.world, Game.generateFruitBody(midX, midY, newSize));
+					}
+
+					Game.addPop(midX, midY, popR);
 					Game.addScorePopup(midX, midY, sizeIndex);
 					Game.handleCombo(sizeIndex);
 
-					if (Game.rogueRun.active) {
+					if (rr.active) {
+						// boss_size7_clear: sizeIndex >= 6 removes all size0 fruits
+						if (sizeIndex >= 6 && rr.relics.some(r => r.id === 'boss_size7_clear')) {
+							const size0 = Composite.allBodies(engine.world).filter(
+								b => !b.isStatic && b.sizeIndex === 0
+							);
+							if (size0.length) {
+								Composite.remove(engine.world, size0);
+								Game.showCelebration('💫 七星破壊！サイズ0を全消去！');
+							}
+						}
+
 						const relicBonus = Game.applyRelicMergeEffect(sizeIndex, midX, midY);
 						if (relicBonus > 0) Game.extraPoints += relicBonus;
 						const arcanaBonus = Game.applyArcanaEffect(sizeIndex, midX, midY, false);
@@ -2032,7 +2616,9 @@ const Game = {
 
 					Game.calculateScore();
 					if (Game.settings.gameMode === 'challenge') Game.checkChallenge();
-					if (isMaxMerge) Game.showCelebration('🎊 次は最大フルーツ！ 🎊');
+					if (isMaxMerge && !rr.relics.some(r => r.id === 'boss_instant_max')) {
+						Game.showCelebration('🎊 次は最大フルーツ！ 🎊');
+					}
 				}
 			}
 		});
@@ -2061,6 +2647,28 @@ const Game = {
 		// ハードモード: Ante開始直後1.5秒間は猶予（フルーツが安定するまで）
 		if (Game.rogueRun.active && Game.rogueRun.persistent &&
 		    performance.now() - Game.rogueRun.anteStartTime < 1500) return;
+
+		// ── boss_overtime: 5-second grace period (one-time) ────
+		const rr = Game.rogueRun;
+		if (rr.active && !rr._overtimeUsed && rr.relics.some(r => r.id === 'boss_overtime')) {
+			rr._overtimeUsed = true;
+			const el = document.getElementById('overtime-countdown');
+			if (el) {
+				el.style.display = 'block';
+				let sec = 5;
+				el.innerText = `⏳ ${sec}`;
+				const tick = setInterval(() => {
+					sec--;
+					if (el) el.innerText = sec > 0 ? `⏳ ${sec}` : '';
+					if (sec <= 0) {
+						clearInterval(tick);
+						if (el) el.style.display = 'none';
+						Game.loseGame();
+					}
+				}, 1000);
+			}
+			return; // grace period in effect
+		}
 
 		// ── Shield charges (roguerun only) ──────────────────────
 		if (Game.rogueRun.active && Game.rogueRun.shieldCharges > 0) {
@@ -2144,21 +2752,65 @@ const Game = {
 	},
 
 	generateFruitBody: function (x, y, sizeIndex, extraConfig = {}) {
+		const rr   = Game.rogueRun;
 		const size = Game.fruitSizes[sizeIndex];
-		const circle = Bodies.circle(x, y, size.radius, {
+		const shrink = rr.active && rr.relics.some(r => r.id === 'boss_shrink');
+		const square = rr.active && rr.relics.some(r => r.id === 'boss_square') && !extraConfig.isStatic;
+		const actualRadius = shrink ? Math.round(size.radius * 0.8) : size.radius;
+		const scale = actualRadius / 512;
+
+		let body;
+		if (square) {
+			const side = actualRadius * 2;
+			body = Bodies.rectangle(x, y, side, side, {
+				...fruitPhysics,
+				...extraConfig,
+				render: { sprite: { texture: size.img, xScale: scale, yScale: scale } },
+			});
+		} else {
+			body = Bodies.circle(x, y, actualRadius, {
+				...fruitPhysics,
+				...extraConfig,
+				render: { sprite: { texture: size.img, xScale: scale, yScale: scale } },
+			});
+		}
+		body.sizeIndex = sizeIndex;
+		body._radius   = actualRadius;
+		body.popped    = false;
+		return body;
+	},
+
+	// ── 爆弾フルーツ生成（boss_bomb レリック） ──
+	generateBombFruitBody: function (x, y) {
+		const r = 36;
+		const body = Bodies.circle(x, y, r, {
 			...fruitPhysics,
-			...extraConfig,
-			render: {
-				sprite: {
-					texture: size.img,
-					xScale: size.radius / 512,
-					yScale: size.radius / 512,
-				}
-			},
+			label: 'bombFruit',
+			render: { fillStyle: '#cc2200', strokeStyle: '#ff6600', lineWidth: 3 },
 		});
-		circle.sizeIndex = sizeIndex;
-		circle.popped = false;
-		return circle;
+		body.isBomb    = true;
+		body.sizeIndex = null;
+		body._radius   = r;
+		body.popped    = false;
+		return body;
+	},
+
+	explodeBomb: function (bomb) {
+		if (bomb.popped) return;
+		bomb.popped = true;
+		const bx = bomb.position.x;
+		const by = bomb.position.y;
+		const blastR = 120;
+		const toRemove = [bomb];
+		Composite.allBodies(engine.world).forEach(b => {
+			if (b.isStatic || b === bomb) return;
+			const dx = b.position.x - bx;
+			const dy = b.position.y - by;
+			if (Math.sqrt(dx * dx + dy * dy) < blastR) toRemove.push(b);
+		});
+		Composite.remove(engine.world, toRemove);
+		Game.addPop(bx, by, blastR);
+		Game.showCelebration('💥 爆発！');
 	},
 
 	// ── ボス敵フルーツ生成（合体不可・専用画像・丸くクリップ済み） ──
@@ -2230,8 +2882,29 @@ const Game = {
 		Game.sounds.click.play();
 		Game.stateIndex = GameStates.DROP;
 
-		const latestFruit = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize);
-		Composite.add(engine.world, latestFruit);
+		const rr = Game.rogueRun;
+		const hasBomb   = rr.active && rr.relics.some(r => r.id === 'boss_bomb');
+		const hasDouble = rr.active && rr.relics.some(r => r.id === 'boss_double_drop');
+
+		// boss_bomb: 15% chance spawn bomb fruit instead
+		if (hasBomb && Math.random() < 0.15) {
+			const bomb = Game.generateBombFruitBody(x, previewBallHeight);
+			Composite.add(engine.world, bomb);
+		} else {
+			const latestFruit = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize);
+			Composite.add(engine.world, latestFruit);
+
+			// boss_double_drop: 150ms later, second fruit slightly offset
+			if (hasDouble) {
+				const size2 = Game.currentFruitSize;
+				const x2 = Math.max(50, Math.min(Game.width - 50, x + (Math.random() < 0.5 ? -50 : 50)));
+				setTimeout(() => {
+					if (Game.stateIndex !== GameStates.LOSE && Game.stateIndex !== GameStates.SHOP) {
+						Composite.add(engine.world, Game.generateFruitBody(x2, previewBallHeight, size2));
+					}
+				}, 150);
+			}
+		}
 
 		Game.currentFruitSize = Game.nextFruitSize;
 		Game.setNextFruitSize();
