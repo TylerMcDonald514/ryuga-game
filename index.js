@@ -75,8 +75,8 @@ const RELIC_DEFS = [
 	  desc: '30%の確率でフルーツが1サイズ大きくなる' },
 	{ id: 'rebirth',       name: '再誕',            emoji: '♻️', rarity: 'uncommon',  cost: 45,
 	  desc: '合体後15%の確率でサイズ1が出現' },
-	{ id: 'ante_bonus',    name: 'Anteボーナス',   emoji: '🎁', rarity: 'uncommon',  cost: 30,
-	  desc: 'Ante開始時にスコア+50pt' },
+	{ id: 'ante_bonus',    name: 'フロアボーナス', emoji: '🎁', rarity: 'uncommon',  cost: 30,
+	  desc: 'フロア開始時にスコア+50pt' },
 	{ id: 'diamond',       name: 'ダイヤの心',     emoji: '💎', rarity: 'uncommon',  cost: 50,
 	  desc: '合体するたびに+10pts追加' },
 	// ── RARE (5) ────────────────────────────────────────────
@@ -89,7 +89,7 @@ const RELIC_DEFS = [
 	{ id: 'shield',        name: '鉄壁の盾',        emoji: '🛡️', rarity: 'rare',      cost: 100,
 	  desc: 'ゲームオーバーを1回防ぐ（シールド+1）' },
 	{ id: 'crown',         name: '王冠',            emoji: '👑', rarity: 'rare',      cost: 85,
-	  desc: 'このAnteのスコア目標を20%下げる' },
+	  desc: 'このフロアのスコア目標を20%下げる' },
 	// ── EPIC (5) ────────────────────────────────────────────
 	{ id: 'trident',       name: '三叉の槍',        emoji: '🔱', rarity: 'epic',      cost: 200,
 	  desc: 'サイズ2以上の合体でコイン+5' },
@@ -100,10 +100,10 @@ const RELIC_DEFS = [
 	{ id: 'butterfly',     name: '蝶の変化',        emoji: '🦋', rarity: 'epic',      cost: 180,
 	  desc: 'ドロップするフルーツがサイズ1〜5を順番に循環する' },
 	{ id: 'asteroid',      name: '小惑星',          emoji: '🪨', rarity: 'epic',      cost: 160,
-	  desc: 'Ante開始時にサイズ1のフルーツを3個出現させる' },
+	  desc: 'フロア開始時にサイズ1のフルーツを3個出現させる' },
 	// ── LEGENDARY (4) ───────────────────────────────────────
 	{ id: 'alchemist',     name: '錬金術師',        emoji: '⚗️', rarity: 'legendary', cost: 320,
-	  desc: 'Ante終了時、所持コインを全てスコアに変換(1コイン=5pt)' },
+	  desc: 'フロア終了時、所持コインを全てスコアに変換(1コイン=5pt)' },
 	{ id: 'talisman',      name: 'タリスマン',      emoji: '🧿', rarity: 'legendary', cost: 350,
 	  desc: 'シールド+3（鉄壁の盾と重複可）' },
 	{ id: 'cosmos',        name: 'コスモス',        emoji: '🌌', rarity: 'legendary', cost: 420,
@@ -143,16 +143,16 @@ const ZONE_CONFIG = [
 const ARCANA_DEFS = [
 	// ── COMMON (3) ──
 	{ id: 'fool',           name: 'The Fool',           emoji: '🃏', rarity: 'common',
-	  desc: 'このAnteの目標スコア -20%' },
+	  desc: 'このフロアの目標スコア -20%' },
 	{ id: 'magician',       name: 'The Magician',       emoji: '🎩', rarity: 'common',
 	  desc: '次3回のドロップが同じサイズ' },
 	{ id: 'high_priestess', name: 'The High Priestess', emoji: '🌙', rarity: 'common',
 	  desc: '合体時15%でコイン+3' },
 	// ── UNCOMMON (3) ──
 	{ id: 'emperor',        name: 'The Emperor',        emoji: '🔴', rarity: 'uncommon',
-	  desc: '全合体スコア ×1.5（このAnteのみ）' },
+	  desc: '全合体スコア ×1.5（このフロアのみ）' },
 	{ id: 'chariot',        name: 'The Chariot',        emoji: '🏎️', rarity: 'uncommon',
-	  desc: '重力 -25%（このAnteのみ）' },
+	  desc: '重力 -25%（このフロアのみ）' },
 	{ id: 'hermit',         name: 'The Hermit',         emoji: '🕯️', rarity: 'uncommon',
 	  desc: 'ショップで1個無料（1回限り）' },
 	// ── RARE (6) ──
@@ -163,9 +163,9 @@ const ARCANA_DEFS = [
 	{ id: 'moon_arcana',    name: 'The Moon',           emoji: '🌕', rarity: 'rare',
 	  desc: '次のフルーツが必ずサイズ7（1回のみ）' },
 	{ id: 'sun',            name: 'The Sun',            emoji: '☀️', rarity: 'rare',
-	  desc: 'このAnte中、コンボボーナス ×3' },
+	  desc: 'このフロア中、コンボボーナス ×3' },
 	{ id: 'devil',          name: 'The Devil',          emoji: '😈', rarity: 'rare',
-	  desc: 'ボスAnteのみ デスリュウガ強化' },
+	  desc: 'ボスフロアのみ デスリュウガ強化' },
 	{ id: 'world',          name: 'The World',          emoji: '🌍', rarity: 'rare',
 	  desc: '目標スコア達成時にコイン+100' },
 ];
@@ -229,6 +229,10 @@ const Game = {
 		if (saved) {
 			try { Game.settings = { ...Game.settings, ...JSON.parse(saved) }; } catch (e) {}
 		}
+		// Migrate removed mode: hardcoreroguerun → hardroguerun
+		if (Game.settings.gameMode === 'hardcoreroguerun') {
+			Game.settings.gameMode = 'hardroguerun';
+		}
 		// Apply to UI controls
 		document.getElementById('bgm-volume').value        = Game.settings.bgmVolume;
 		document.getElementById('sfx-volume').value        = Game.settings.sfxVolume;
@@ -268,10 +272,10 @@ const Game = {
 	},
 
 	// ── Leaderboard (mode-specific) ───────────────────────
-	leaderboards: { normal: [], timeattack: [], challenge: [], roguerun: [] },
+	leaderboards: { normal: [], timeattack: [], challenge: [], roguerun: [], hardroguerun: [] },
 
 	loadAllLeaderboards: function () {
-		['normal', 'timeattack', 'challenge', 'roguerun'].forEach(mode => {
+		['normal', 'timeattack', 'challenge', 'roguerun', 'hardroguerun'].forEach(mode => {
 			const saved = localStorage.getItem(`ryugagay-lb-${mode}`);
 			if (saved) { try { Game.leaderboards[mode] = JSON.parse(saved); } catch (e) {} }
 		});
@@ -769,8 +773,19 @@ const Game = {
 
 	// ── Share / Screenshot ────────────────────────────────
 	copyScore: function () {
-		const mode = { normal: 'ノーマル', timeattack: 'タイムアタック', challenge: 'チャレンジ' };
-		const text = `リュウガゲイ夢（改）\nスコア: ${Game.score}点\n最高記録: ${Game.cache.highscore}点\nモード: ${mode[Game.settings.gameMode] || 'ノーマル'}\n#リュウガゲイ夢改`;
+		const m = Game.settings.gameMode;
+		const modeNames = {
+			normal:           'ノーマル',
+			timeattack:       'タイムアタック',
+			challenge:        'チャレンジ',
+			roguerun:         'ローグラン（ノーマル）',
+			hardroguerun:     'ローグラン（ハード）',
+			hardcoreroguerun: 'ローグラン（ハードコア）',
+		};
+		const isRogue  = ['roguerun', 'hardroguerun', 'hardcoreroguerun'].includes(m);
+		const score    = isRogue ? Game.rogueRun.totalScore : Game.score;
+		const modeName = modeNames[m] || 'ノーマル';
+		const text = `リュウガゲイ夢（改）\nスコア: ${score}点\n最高記録: ${Game.cache.highscore}点\nモード: ${modeName}\n#リュウガゲイ夢改`;
 		navigator.clipboard.writeText(text).catch(() => {});
 	},
 
@@ -863,11 +878,11 @@ const Game = {
 		rr.shieldCharges = 0;
 		rr.mergeCount    = 0;
 		rr.cycleSize     = 0;
-		// hardroguerun: 盤面＆スコア両方持続 (ハード)
-		// hardcoreroguerun: 盤面持続・スコアリセット (ハードコア)
+		// roguerun:     盤面リセット・スコア累積 (ノーマル)
+		// hardroguerun: 盤面持続・スコア累積   (ハード)
 		const m = Game.settings.gameMode;
-		rr.persistent   = (m === 'hardroguerun' || m === 'hardcoreroguerun');
-		rr.keepScore    = (m === 'hardroguerun');
+		rr.persistent = (m === 'hardroguerun');
+		rr.keepScore  = (m === 'roguerun' || m === 'hardroguerun');
 		rr.anteScoreBase = 0;
 		rr.arcana        = null;
 		rr.arcanaState   = {};
@@ -935,7 +950,7 @@ const Game = {
 		const cfg = ZONE_CONFIG[rr.anteIndex];
 
 		document.getElementById('rogue-ante-label').innerText =
-			`${cfg.label}  (${rr.anteIndex + 1}/15)`;
+			`${cfg.label}  フロア ${rr.anteIndex + 1}/15`;
 		document.getElementById('rogue-coins-display').innerText = `🪙 ${rr.coins}`;
 
 		const anteScore = rr.keepScore ? Game.score - rr.anteScoreBase : Game.score;
@@ -1084,9 +1099,19 @@ const Game = {
 		// Hermit arcana: first offer is free
 		const hermitActive = rr.arcana && rr.arcana.id === 'hermit' && !rr.arcanaState.hermitUsed;
 
-		document.getElementById('shop-offers').innerHTML = rr.shopOffers.length === 0
+		document.getElementById('shop-offers').innerHTML = rr.shopOffers.every(r => !r)
 			? '<div class="lb-empty">購入可能なレリックがありません</div>'
 			: rr.shopOffers.map((r, i) => {
+				// null = already purchased this shop phase → show greyed sold card
+				if (!r) {
+					return `<div class="joker-card sold" style="opacity:0.45;pointer-events:none;">
+						<div class="joker-card-emoji">✅</div>
+						<div class="joker-card-info">
+							<div class="joker-card-name">購入済み</div>
+						</div>
+						<button class="joker-buy-btn" disabled>購入済み</button>
+					</div>`;
+				}
 				const isFree    = hermitActive && i === 0;
 				const effCost   = isFree ? 0 : r.cost;
 				const canAfford = rr.coins >= effCost;
@@ -1152,7 +1177,7 @@ const Game = {
 	buyRelic: function (idx) {
 		const rr = Game.rogueRun;
 		const relic = rr.shopOffers[idx];
-		if (!relic) return;
+		if (!relic) return; // null = already purchased (greyed-out guard)
 
 		const hermitFree = rr.arcana && rr.arcana.id === 'hermit' && !rr.arcanaState.hermitUsed && idx === 0;
 		const cost = hermitFree ? 0 : relic.cost;
@@ -1162,6 +1187,8 @@ const Game = {
 		rr.coins -= cost;
 		if (hermitFree) rr.arcanaState.hermitUsed = true;
 
+		// Mark slot as sold before pushing so double-tap is impossible
+		rr.shopOffers[idx] = null;
 		rr.relics.push(relic);
 
 		// Immediate activation effects
@@ -1207,7 +1234,7 @@ const Game = {
 	startNextAnte: function () {
 		document.getElementById('shop-overlay').style.display = 'none';
 
-		// 通常ローグラン: 盤面クリア / ハードコア: フルーツを残す
+		// ノーマル: 盤面クリア / ハード: フルーツを残す
 		if (!Game.rogueRun.persistent) {
 			const bodies = Composite.allBodies(engine.world).filter(b => !b.isStatic);
 			Composite.remove(engine.world, bodies);
@@ -1219,11 +1246,10 @@ const Game = {
 		Game.maxComboReached = 0;
 
 		if (Game.rogueRun.keepScore) {
-			// ハードモード: スコア・フルーツカウントを引き継ぐ
-			// anteScoreBase を今のスコアに更新（次Anteの差分計算用）
+			// ノーマル・ハード共通: スコアは累積。anteScoreBbaseを更新して差分計算に使う
 			Game.rogueRun.anteScoreBase = Game.score;
 		} else {
-			// 通常・ハードコア: スコアリセット
+			// ローグラン以外のモード用フォールバック（通常はここに来ない）
 			Game.score        = 0;
 			Game.extraPoints  = 0;
 			Game.fruitsMerged = new Array(Game.fruitSizes.length).fill(0);
@@ -1246,7 +1272,7 @@ const Game = {
 		);
 		Composite.add(engine.world, Game.elements.previewBall);
 
-		// ハードコアモード: 上限を超えているフルーツを安全に削除してからAnteを開始
+		// ハードモード: 上限を超えているフルーツを安全に削除してからAnteを開始
 		if (Game.rogueRun.persistent) {
 			const overLimit = Composite.allBodies(engine.world).filter(
 				b => !b.isStatic && (b.position.y - (b.circleRadius || 0)) < loseHeight + 20
@@ -1614,7 +1640,7 @@ const Game = {
 		Game.fruitsMerged = new Array(Game.fruitSizes.length).fill(0);
 
 		// ── Menu mode selector ──
-		const ROGUE_MODES = ['roguerun', 'hardroguerun', 'hardcoreroguerun'];
+		const ROGUE_MODES = ['roguerun', 'hardroguerun'];
 
 		const syncModeBtns = (mode) => {
 			// 通常ボタン（data-mode持ち）
@@ -1675,7 +1701,7 @@ const Game = {
 		});
 
 		// ── Helper: get final score to save (roguerun uses totalScore) ──
-		const isRogueMode = ['roguerun', 'hardroguerun', 'hardcoreroguerun'].includes(Game.settings.gameMode);
+		const isRogueMode = ['roguerun', 'hardroguerun'].includes(Game.settings.gameMode);
 		const getFinalSaveScore = () => isRogueMode ? Game.rogueRun.totalScore : Game.score;
 
 		// ── Helper: save to both local and online leaderboard ──
@@ -1889,7 +1915,7 @@ const Game = {
 			Game.startTimer();
 		} else if (Game.settings.gameMode === 'challenge') {
 			Game.pickChallenge();
-		} else if (['roguerun', 'hardroguerun', 'hardcoreroguerun'].includes(Game.settings.gameMode)) {
+		} else if (['roguerun', 'hardroguerun'].includes(Game.settings.gameMode)) {
 			Game.startRogueRun();
 		}
 
@@ -2032,7 +2058,7 @@ const Game = {
 	loseGame: function () {
 		if (Game.stateIndex === GameStates.LOSE || Game.stateIndex === GameStates.SHOP) return;
 
-		// ハードコアモード: Ante開始直後1.5秒間は猶予（フルーツが安定するまで）
+		// ハードモード: Ante開始直後1.5秒間は猶予（フルーツが安定するまで）
 		if (Game.rogueRun.active && Game.rogueRun.persistent &&
 		    performance.now() - Game.rogueRun.anteStartTime < 1500) return;
 

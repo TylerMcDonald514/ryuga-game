@@ -381,6 +381,12 @@
     #player-name-input:focus { border-color: var(--col-primary); }
     #player-name-input::placeholder { color: #bbb; }
 
+    body.dark-mode #player-name-input {
+      background: #0f2a4a;
+      color: #e8e8f8;
+    }
+    body.dark-mode #player-name-input::placeholder { color: #6688aa; }
+
     .game-end-buttons {
       display: flex;
       gap: 10px;
@@ -1328,9 +1334,8 @@
               <button class="lb-mode-btn active" data-lbmode="normal">ノーマル</button>
               <button class="lb-mode-btn" data-lbmode="timeattack">⏱ TA</button>
               <button class="lb-mode-btn" data-lbmode="challenge">🎯 チャレンジ</button>
-              <button class="lb-mode-btn" data-lbmode="roguerun">🏃 ローグラン</button>
+              <button class="lb-mode-btn" data-lbmode="roguerun">🏃 ノーマル</button>
               <button class="lb-mode-btn" data-lbmode="hardroguerun">💀 ハード</button>
-              <button class="lb-mode-btn" data-lbmode="hardcoreroguerun">☠️ HC</button>
             </div>
             <!-- Source tabs -->
             <div class="lb-tabs">
@@ -1401,7 +1406,7 @@
 
         <!-- Roguelike Status Bar (replaces normal status bar during roguerun) -->
         <div id="rogue-status">
-          <div id="rogue-ante-label">ANTE 1/5</div>
+          <div id="rogue-ante-label">フロア 1/15</div>
           <div id="rogue-progress-wrap">
             <div id="rogue-progress-bar"><div id="rogue-progress-fill"></div></div>
             <div id="rogue-progress-text">0 / 150</div>
@@ -1426,7 +1431,6 @@
           <div id="roguerun-submenu" class="mode-submenu" style="display:none">
             <button class="mode-btn mode-btn-sub" data-mode="roguerun">📋 ノーマル</button>
             <button class="mode-btn mode-btn-sub" data-mode="hardroguerun">💀 ハード</button>
-            <button class="mode-btn mode-btn-sub" data-mode="hardcoreroguerun">☠️ ハードコア</button>
           </div>
         </div>
         <button id="menu-lb-btn">🏆 ランキング</button>
